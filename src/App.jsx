@@ -11,6 +11,7 @@ import { CircularProgress } from '@mui/material';
 
 const Especialidades = React.lazy(() => import('./especialidades/pages/GetEspecialidades'));
 // const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
+const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 
 const App = () => {
   return (
@@ -19,7 +20,8 @@ const App = () => {
         <Routes>
           <Route path="/especialidades" element={<Especialidades />} />
           {/* <Route path="/medicos/:medicoId" element={<Medicos />} /> */}
-          <Route path="/" element={<Navigate to="/especialidades" />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/" element={<Navigate to="/auth" />} />
         </Routes>
       </Router>
     </React.Suspense>
