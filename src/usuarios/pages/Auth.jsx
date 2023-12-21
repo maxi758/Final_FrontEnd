@@ -1,32 +1,33 @@
-import React, { useState, useContext } from "react";
-
-import {Card, Button, CircularProgress} from '@mui/material';
+import React, { useState, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../components/ErrorModal';
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from "../../util/validators";
-import { useForm } from "../../hooks/form-hook";
-import { useHttpClient } from "../../hooks/http-hook";
-import { AuthContext } from "../../context/auth-context";
+} from '../../util/validators';
+import { useForm } from '../../hooks/form-hook';
+import { useHttpClient } from '../../hooks/http-hook';
+import { AuthContext } from '../../context/auth-context';
 
-import "./Auth.css";
+import './Auth.css';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); //
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
-        value: "",
+        value: '',
         isValid: false,
       },
       password: {
-        value: "",
+        value: '',
         isValid: false,
       },
     },
@@ -39,7 +40,6 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
-          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -48,11 +48,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: {
-            value: "",
-            isValid: false,
-          },
-          image: {
-            value: null,
+            value: '',
             isValid: false,
           },
         },
@@ -71,33 +67,36 @@ const Auth = () => {
       try {
         const responseData = await sendRequest(
           `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/login`,
-          "POST",
+          'POST',
           JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
           {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           }
         );
         console.log(responseData);
+        if (!responseData.usuario) throw new Error(responseData.message);
+
         auth.login(responseData.usuario._id, responseData.token);
+        setIsAuthenticated(true);
       } catch (err) {
         console.log(err);
       }
     } else {
       try {
         const formData = new FormData(); // FormData es una clase de js que nos permite crear un objeto con clave-valor, donde la clave es el nombre del input y el valor es el archivo
-        formData.append("email", formState.inputs.email.value);
-        formData.append("name", formState.inputs.name.value);
-        formData.append("password", formState.inputs.password.value);
+        formData.append('email', formState.inputs.email.value);
+        formData.append('name', formState.inputs.name.value);
+        formData.append('password', formState.inputs.password.value);
         console.log(process.env.REACT_APP_BACKEND_URL);
         const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
-          "POST",
+          'POST',
           formData // formData se envía como body y los headers se configuran automáticamente
         );
-          console.log(responseData);
+        console.log(responseData);
         auth.login(responseData.userId, responseData.token);
       } catch (err) {
         console.log(err);
@@ -111,6 +110,7 @@ const Auth = () => {
   };
   return (
     <React.Fragment>
+      {isAuthenticated && <Navigate to="/" />}
       <ErrorModal error={error} onClear={errorHandler} />
       <Card className="authentication">
         {isLoading && <CircularProgress asOverlay />}
@@ -148,11 +148,11 @@ const Auth = () => {
             onInput={inputHandler}
           />
           <Button type="submit" disabled={!formState.isValid}>
-            {isLoginMode ? "LOGIN" : "SIGNUP"}
+            {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
         </form>
         <Button inverse onClick={switchModeHandler}>
-          SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
+          SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
         </Button>
       </Card>
     </React.Fragment>
