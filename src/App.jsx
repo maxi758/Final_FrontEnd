@@ -15,6 +15,8 @@ const Especialidades = React.lazy(() =>
   import('./especialidades/pages/GetEspecialidades')
 );
 const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
+const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
+const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
 const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 
 const App = () => {
@@ -34,8 +36,10 @@ const App = () => {
       <Routes>
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos" element={<Medicos />} />
+        <Route path="/medicos/new" element={<NewMedico />} />
+        <Route path="/medicos/:id" element={<EditMedico />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/" element={<Navigate to="/especialidades" />} />
+        <Route path="/" element={<Navigate to="/medicos" />} />
       </Routes>
     );
   }

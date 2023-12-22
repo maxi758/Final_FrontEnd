@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { NavLink } from "react-router-dom"; // NavLink is a special version of the <Link> component that will add styling attributes to the rendered element when it matches the current URL.
-
+import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom'; // NavLink is a special version of the <Link> component that will add styling attributes to the rendered element when it matches the current URL.
+import BasicMenu from './menu';
 import { AuthContext } from '../../../context/auth-context';
-import "./NavLinks.css";
+import './NavLinks.css';
 
 const NavLinks = (props) => {
   const auth = useContext(AuthContext);
@@ -10,18 +10,38 @@ const NavLinks = (props) => {
   return (
     <ul className="nav-links">
       <li>
-        <NavLink to="/">
-          ALL USERS
-        </NavLink>
+        <NavLink to="/">Medicos</NavLink>
       </li>
+      {/* {auth.isLoggedIn && (
+        <li>
+          <NavLink to={`/${auth.userId}/especialidades`}>Especialidades</NavLink>
+        </li>
+      )} */}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to={`/${auth.userId}/places`}>MY PLACES</NavLink>
+          <NavLink to={`/especialidades`}>Especialidades</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/places/new">ADD PLACE</NavLink>
+          <BasicMenu
+            buttonLabel={'Medicos'}
+            options={[
+              {
+                label: 'Nuevo Medico',
+                to: '/medicos/new',
+              },
+              {
+                label: 'Listado de Medicos',
+                to: '/medicos',
+              },
+              {
+                label: 'Editar Medico',
+                to: '/medicos/edit',
+              }
+              // Add more routes as needed
+            ]}
+          />
         </li>
       )}
       {!auth.isLoggedIn && (

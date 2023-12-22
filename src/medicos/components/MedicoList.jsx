@@ -38,7 +38,8 @@ const MedicoList = (props) => {
             nombre={medico.nombre}
             apellido={medico.apellido}
             matricula={medico.matricula}
-            especialidad={medico.especialidad.nombre}
+            especialidad={medico.especialidad}
+            onDelete={props.onDeleteMedico}
           />
         ))}
       </ul>

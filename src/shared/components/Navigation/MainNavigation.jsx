@@ -37,7 +37,7 @@ const MainNavigation = props => {
           <span />
         </button>
         <h1 className="main-navigation__title">
-          <Link to="/">YourPlaces</Link>{" "}
+          <Link to="/">Clínica Medica</Link>{" "}
           {/*esto es para que cuando haga click en el titulo, me lleve a la ruta principal */}
           {/* <Link to="/about">About</Link>
 				<Link to="/contact">Contact</Link> */}
