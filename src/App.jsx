@@ -14,12 +14,13 @@ import { CircularProgress } from '@mui/material';
 const Especialidades = React.lazy(() =>
   import('./especialidades/pages/GetEspecialidades')
 );
-// const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
+const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
 const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
   let routes;
+  console.log('token: ', token);
   if (!token) {
     routes = (
       <Routes>
@@ -32,6 +33,7 @@ const App = () => {
     routes = (
       <Routes>
         <Route path="/especialidades" element={<Especialidades />} />
+        <Route path="/medicos" element={<Medicos />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<Navigate to="/especialidades" />} />
       </Routes>

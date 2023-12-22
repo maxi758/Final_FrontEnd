@@ -1,0 +1,9 @@
+.product-list {
+    list-style: none;
+    margin: 1rem auto;
+    padding: 0;
+    width: 90%;
+    max-width: 40rem;
+    background-color: rgb(121, 69, 45);
+  }
+  
