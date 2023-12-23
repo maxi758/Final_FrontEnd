@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import {HttpError} from "../util/http-error.js";
 
 export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,12 +18,16 @@ export const useHttpClient = () => {
         });
   
         const responseData = await response.json();
-  
+        console.log(response.status);
+        if (!response.ok) {
+          throw new HttpError(responseData.message, response.status);
+        }
         setIsLoading(false);
   
         return responseData;
       } catch (err) {
-        setError(err.message);
+        console.log(err);
+        setError({message: err.message || "Something went wrong, please try again later.", errorCode: err.code});
         setIsLoading(false);
         throw err;
       }

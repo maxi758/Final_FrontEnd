@@ -92,7 +92,7 @@ const UpdateMedico = (props) => {
       formData.append('matricula', formState.inputs.matricula.value);
       formData.append('especialidad', formState.inputs.especialidad.value); // el value es el archivo
 
-      await sendRequest(
+      const response = await sendRequest(
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
         'PATCH',
         JSON.stringify({
@@ -106,9 +106,22 @@ const UpdateMedico = (props) => {
           Authorization: 'Bearer ' + auth.token,
         }
       );
-      navigate('/medicos');
-    } catch (err) {}
+
+        //console.log(response.code);
+      return response;
+      //navigate('/medicos');
+    } catch (err) {
+        console.log(err);
+        //setError(err.message);
+    }
   };
+
+  if (error) {
+    console.log(error);
+    return (
+      <ErrorModal error={error.message} code={error.errorCode}  onClear={clearError} />
+    );
+  }
 
   if (isLoadingMedico) {
     return (
@@ -119,7 +132,7 @@ const UpdateMedico = (props) => {
   }
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      {/* <ErrorModal error={error.message} onClear={clearError} /> */}
       <form className="place-form" onSubmit={medicoUpdateSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input
