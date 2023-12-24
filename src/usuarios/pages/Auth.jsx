@@ -79,7 +79,7 @@ const Auth = () => {
         console.log(responseData);
         if (!responseData.usuario) throw new Error(responseData.message);
 
-        auth.login(responseData.usuario._id, responseData.token);
+        auth.login(responseData.usuario._id, responseData.token, responseData.usuario.rol);
         setIsAuthenticated(true);
       } catch (err) {
         console.log(err);

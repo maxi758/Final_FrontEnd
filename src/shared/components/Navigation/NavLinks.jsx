@@ -9,9 +9,11 @@ const NavLinks = (props) => {
 
   return (
     <ul className="nav-links">
-      <li>
-        <NavLink to="/">Medicos</NavLink>
-      </li>
+      {auth.rol === 'PACIENTE' && (
+        <li>
+          <NavLink to="/">Medicos</NavLink>
+        </li>
+      )}
       {/* {auth.isLoggedIn && (
         <li>
           <NavLink to={`/${auth.userId}/especialidades`}>Especialidades</NavLink>
@@ -22,7 +24,7 @@ const NavLinks = (props) => {
           <NavLink to={`/especialidades`}>Especialidades</NavLink>
         </li>
       )}
-      {auth.isLoggedIn && (
+      {auth.rol === 'ADMIN' && (
         <li>
           <BasicMenu
             buttonLabel={'Medicos'}
@@ -38,7 +40,7 @@ const NavLinks = (props) => {
               {
                 label: 'Editar Medico',
                 to: '/medicos/edit',
-              }
+              },
               // Add more routes as needed
             ]}
           />

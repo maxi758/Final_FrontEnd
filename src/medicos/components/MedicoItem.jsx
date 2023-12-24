@@ -74,10 +74,10 @@ const MedicoItem = (props) => {
             <p>{props.especialidad.nombre}</p>
           </div>
           <div className="place-item__actions">
-            {auth.userId  && (
+            {auth.rol === 'ADMIN'  && (
               <Button to={`/medicos/${props.id}`}>EDITAR</Button>
             )}
-            {auth.userId && (
+            {auth.rol === 'ADMIN' && (
               <Button danger onClick={showDeleteWarningHandler}>
                 ELIMINAR
               </Button>

@@ -16,11 +16,11 @@ const Especialidades = React.lazy(() =>
 );
 const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
 const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
-const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
+//const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
 const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 
 const App = () => {
-  const { token, login, logout, userId } = useAuth();
+  const { token, login, logout, userId, rol } = useAuth();
   let routes;
   console.log('token: ', token);
   if (!token) {
@@ -32,12 +32,15 @@ const App = () => {
       </Routes>
     );
   } else {
+    
+    console.log('userId: ', userId);
+    console.log('rol: ', rol);
     routes = (
       <Routes>
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos" element={<Medicos />} />
         <Route path="/medicos/new" element={<NewMedico />} />
-        <Route path="/medicos/:id" element={<EditMedico />} />
+        {/* <Route path="/medicos/:id" element={<EditMedico />} /> */}
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<Navigate to="/medicos" />} />
       </Routes>
@@ -50,6 +53,7 @@ const App = () => {
         isLoggedIn: !!token,
         token: token,
         userId: userId,
+        rol: rol,
         login: login,
         logout: logout,
       }}
