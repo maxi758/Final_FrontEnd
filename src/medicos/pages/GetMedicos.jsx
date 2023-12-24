@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import MedicoList from '../components/MedicoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import { AuthContext } from '../../context/auth-context';
 
 const Medicos = () => {
+  const auth = useContext(AuthContext);
   const [loadedMedicos, setLoadedMedicos] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -15,7 +17,13 @@ const Medicos = () => {
         console.log('fetching medicos');
         console.log(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`);
         const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`,
+          'GET',
+          null,
+          {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + auth.token,
+          }
         );
         console.log('Response from fetch', responseData.medicos);
         setLoadedMedicos(responseData.medicos);
