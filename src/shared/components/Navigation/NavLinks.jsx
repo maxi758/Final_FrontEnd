@@ -9,6 +9,11 @@ const NavLinks = (props) => {
 
   return (
     <ul className="nav-links">
+      {auth.rol === 'ADMIN' && (
+        <li>
+          <NavLink to="/auth">Usuarios</NavLink>
+        </li>
+      )}
       {auth.rol === 'PACIENTE' && (
         <li>
           <NavLink to="/">Medicos</NavLink>
