@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
@@ -19,7 +19,15 @@ const UpdateUser = () => {
   const key = useParams().key || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+	useEffect(() => {
+		const token = auth.token;
+		if (token) {
+			setIsAuthenticated(true);
+		}
+		else {
+			setIsAuthenticated(false);
+		}
+	}, [auth.token]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       recoverEmail: {
@@ -109,7 +117,6 @@ const UpdateUser = () => {
   }
 
   return (
-    console.log(formState.inputs),
     (
       <React.Fragment>
         {/* <ErrorModal error={error} onClear={clearError} /> */}
@@ -120,6 +127,7 @@ const UpdateUser = () => {
           </h2>
           <hr />
           <form onSubmit={authSubmitHandler}>
+						{!auth.isLoggedIn && (
             <Input
               id="recoverEmail"
               element="input"
@@ -129,6 +137,7 @@ const UpdateUser = () => {
               errorText="Please enter a valid email address."
               onInput={inputHandler}
             />
+						)}
             {isAuthenticated && (
               <div>
                 <Input
@@ -149,6 +158,7 @@ const UpdateUser = () => {
                   errorText="Please enter a valid password, at least 5 characters."
                   onInput={inputHandler}
                 />
+								{!auth.isLoggedIn && (
                 <Input
                   id="key"
                   element="input"
@@ -160,6 +170,7 @@ const UpdateUser = () => {
                   initialValue={key}
                   initialValid={true}
                 />
+								)}
               </div>
             )}
             <Button
