@@ -46,7 +46,7 @@ const MedicoItem = (props) => {
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
         header="Are you sure?"
-        footerClass="place-item__modal-actions"
+        footerClass="product-item__modal-actions"
         footer={
           <React.Fragment>
             <Button inverse onClick={cancelDeleteHandler}>
@@ -73,7 +73,7 @@ const MedicoItem = (props) => {
             <p>{props.matricula}</p>
             <p>{props.especialidad.nombre}</p>
           </div>
-          <div className="place-item__actions">
+          <div className="product-item__actions">
             {auth.rol === 'ADMIN'  && (
               <Button to={`/medicos/${props.id}`}>EDITAR</Button>
             )}

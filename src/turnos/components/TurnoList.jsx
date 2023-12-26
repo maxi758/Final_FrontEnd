@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, Button, IconButton } from '@mui/material';
 import TurnoItem from './TurnoItem';
 
-import './ProductList.css';
+import '../../medicos/components/ProductList.css';
 import { useNavigate } from 'react-router-dom';
 
 const TurnoList = (props) => {
@@ -35,7 +35,7 @@ const TurnoList = (props) => {
           <TurnoItem
             key={turno.id}
             id={turno.id}
-            fecha={turno.fecha}
+            fecha={new Date(turno.fecha).toLocaleString()}
             observaciones={turno.observaciones}
             onDelete={props.onDeleteMedico}
           />

@@ -39,6 +39,17 @@ const Turnos = () => {
     );
   };
 
+  if (error) {
+    console.log(error);
+    return (
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={clearError}
+      />
+    );
+  }
+  
   return (
     // <React.Fragment>
     //     {isLoading && (
@@ -49,7 +60,6 @@ const Turnos = () => {
     //     {!isLoading && loadedTurnos && <MedicoList items={loadedTurnos} />}
     // </React.Fragment>
     <React.Fragment>
-      <ErrorModal error={error.message} code={error.code} onClear={clearError} />
       {isLoading && (
         <div className="center">
           <CircularProgress asOverlay />

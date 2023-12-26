@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Card, CircularProgress } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
-import './ProductItem.css';
+import '../../medicos/components/ProductItem.css';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
@@ -46,7 +46,7 @@ const TurnoItem = (props) => {
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
         header="Are you sure?"
-        footerClass="place-item__modal-actions"
+        footerClass="product-item__modal-actions"
         footer={
           <React.Fragment>
             <Button inverse onClick={cancelDeleteHandler}>
@@ -59,7 +59,7 @@ const TurnoItem = (props) => {
         }
       >
         <p>
-          Estás seguro que deseas eliminar este medico? Una vez eliminado no se
+          Estás seguro que deseas eliminar este turno? Una vez eliminado no se
           podrá recuperar.
         </p>
       </Modal>
@@ -73,7 +73,7 @@ const TurnoItem = (props) => {
             <p>{props.fecha}</p>
             <p>{props.observaciones}</p>
           </div>
-          <div className="place-item__actions">
+          <div className="product-item__actions">
             {auth.rol === 'ADMIN'  && (
               <Button to={`/turnos/${props.id}`}>EDITAR</Button>
             )}
