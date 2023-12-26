@@ -35,6 +35,7 @@ const TurnoList = (props) => {
           <TurnoItem
             key={turno.id}
             id={turno.id}
+            medico={turno.medico}
             fecha={new Date(turno.fecha).toLocaleString()}
             observaciones={turno.observaciones}
             onDelete={props.onDeleteMedico}

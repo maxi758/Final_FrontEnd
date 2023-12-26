@@ -67,9 +67,9 @@ const TurnoItem = (props) => {
         <Card className="product-item__content">
           {isLoading && <CircularProgress asOverlay />}
           <div className="product-item__info">
-            {/* <h2>
-              {props.nombre} {props.apellido}
-            </h2> */}
+            <h2>
+              {props.medico.nombre} {props.medico.apellido}
+            </h2>
             <p>{props.fecha}</p>
             <p>{props.observaciones}</p>
           </div>
