@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -63,7 +63,7 @@ const Auth = () => {
   };
 
   const createAdminHandler = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     try {
       const responseData = await sendRequest(
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/admin`,
@@ -155,85 +155,95 @@ const Auth = () => {
   if (error) {
     console.log(error);
     return (
-      <ErrorModal error={error.message} code={error.errorCode}  onClear={clearError} />
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={clearError}
+      />
     );
   }
   return (
-    (
-      <React.Fragment>
-        {isAuthenticated && <Navigate to="/" />}
-        {/* <ErrorModal error={error.message} onClear={errorHandler} /> */}
-        <Card className="authentication">
-          {isLoading && <CircularProgress asOverlay />}
-          <h2>Login Required</h2>
-          <hr />
-          <form onSubmit={authSubmitHandler}>
-            {!isLoginMode && (
-              <Input
-                element="input"
-                id="nombre"
-                type="text"
-                label="Nombre"
-                validators={[VALIDATOR_REQUIRE()]}
-                errorText="Ingrese su nombre"
-                onInput={inputHandler}
-              />
-            )}
-            {!isLoginMode && (
-              <Input
-                element="input"
-                id="apellido"
-                type="text"
-                label="Apellido"
-                validators={[VALIDATOR_REQUIRE()]}
-                errorText="Ingrese su apellido"
-                onInput={inputHandler}
-              />
-            )}
-            {!isLoginMode && (
-              <Input
-                element="input"
-                id="dni"
-                type="text"
-                label="dni"
-                validators={[VALIDATOR_REQUIRE()]}
-                errorText="Ingrese su dni"
-                onInput={inputHandler}
-              />
-            )}
+    <React.Fragment>
+      {isAuthenticated && <Navigate to="/" />}
+      {/* <ErrorModal error={error.message} onClear={errorHandler} /> */}
+      <Card className="authentication">
+        {isLoading && <CircularProgress asOverlay />}
+        <h2>Login Required</h2>
+        <hr />
+        <form onSubmit={authSubmitHandler}>
+          {!isLoginMode && (
             <Input
               element="input"
-              id="email"
-              type="email"
-              label="E-Mail"
-              validators={[VALIDATOR_EMAIL()]}
-              errorText="Ingrese un email válido"
+              id="nombre"
+              type="text"
+              label="Nombre"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Ingrese su nombre"
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
             <Input
               element="input"
-              id="password"
-              type="password"
-              label="Password"
-              validators={[VALIDATOR_MINLENGTH(5)]}
-              errorText="Ingrese una contraseña válida de al menos 5 caracteres"
+              id="apellido"
+              type="text"
+              label="Apellido"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Ingrese su apellido"
               onInput={inputHandler}
             />
-            <Button type="submit" disabled={!formState.isValid}>
-              {isLoginMode ? 'LOGIN' : 'SIGNUP'}
-            </Button>
-            {!isLoginMode && auth.rol ==='ADMIN' && (
-              <Button type="submit" onClick={createAdminHandler} disabled={!formState.isValid}>
-                CREATE ADMIN
-              </Button>
-            )}
-          </form>
-          <Button inverse onClick={switchModeHandler}>
-            SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
+          )}
+          {!isLoginMode && (
+            <Input
+              element="input"
+              id="dni"
+              type="text"
+              label="dni"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Ingrese su dni"
+              onInput={inputHandler}
+            />
+          )}
+          <Input
+            element="input"
+            id="email"
+            type="email"
+            label="E-Mail"
+            validators={[VALIDATOR_EMAIL()]}
+            errorText="Ingrese un email válido"
+            onInput={inputHandler}
+          />
+          <Input
+            element="input"
+            id="password"
+            type="password"
+            label="Password"
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            errorText="Ingrese una contraseña válida de al menos 5 caracteres"
+            onInput={inputHandler}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
-        </Card>
-      </React.Fragment>
-    )
+          {!isLoginMode && auth.rol === 'ADMIN' && (
+            <Button
+              type="submit"
+              onClick={createAdminHandler}
+              disabled={!formState.isValid}
+            >
+              CREATE ADMIN
+            </Button>
+          )}
+        </form>
+        <Button inverse onClick={switchModeHandler}>
+          CAMBIAR A {isLoginMode ? 'SIGNUP' : 'LOGIN'}
+        </Button>
+        <hr />
+        <Link to="/recover">
+          <Button>RECUPERAR CONTRASEÑA</Button>
+        </Link>
+      </Card>
+    </React.Fragment>
   );
 };
 

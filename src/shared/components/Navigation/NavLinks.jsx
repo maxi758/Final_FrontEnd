@@ -9,6 +9,9 @@ const NavLinks = (props) => {
 
   return (
     <ul className="nav-links">
+      <li>
+          <NavLink to="/recover">Cuenta</NavLink>
+        </li>
       {auth.rol === 'ADMIN' && (
         <li>
           <NavLink to="/auth">Usuarios</NavLink>
