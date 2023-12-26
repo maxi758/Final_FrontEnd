@@ -13,6 +13,10 @@
   margin-bottom: 0.5rem;
 }
 
+.form-control p {
+  visibility: hidden;
+}
+
 .form-control input,
 .form-control textarea {
   width: 100%;
@@ -32,6 +36,7 @@
 .form-control--invalid label,
 .form-control--invalid p {
   color: red;
+  visibility: visible;
 }
 
 .form-control--invalid input,

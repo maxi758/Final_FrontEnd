@@ -3,13 +3,13 @@ import React, { useState, useContext } from 'react';
 import { Card, CircularProgress } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
-import './ProductItem.css';
+import '../../medicos/components/ProductItem.css';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 import Button from '../../shared/components/FormElements/Button';
 
-const MedicoItem = (props) => {
+const TurnoItem = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -30,7 +30,7 @@ const MedicoItem = (props) => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${props.id}`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${props.id}`,
         'DELETE',
         null,
         { Authorization: 'Bearer ' + auth.token }
@@ -59,7 +59,7 @@ const MedicoItem = (props) => {
         }
       >
         <p>
-          Estás seguro que deseas eliminar este medico? Una vez eliminado no se
+          Estás seguro que deseas eliminar este turno? Una vez eliminado no se
           podrá recuperar.
         </p>
       </Modal>
@@ -68,14 +68,14 @@ const MedicoItem = (props) => {
           {isLoading && <CircularProgress asOverlay />}
           <div className="product-item__info">
             <h2>
-              {props.nombre} {props.apellido}
+              {props.medico.nombre} {props.medico.apellido}
             </h2>
-            <p>{props.matricula}</p>
-            <p>{props.especialidad.nombre}</p>
+            <p>{props.fecha}</p>
+            <p>{props.observaciones}</p>
           </div>
           <div className="product-item__actions">
             {auth.rol === 'ADMIN'  && (
-              <Button to={`/medicos/${props.id}`}>EDITAR</Button>
+              <Button to={`/turnos/${props.id}`}>EDITAR</Button>
             )}
             {auth.rol === 'ADMIN' && (
               <Button danger onClick={showDeleteWarningHandler}>
@@ -89,4 +89,4 @@ const MedicoItem = (props) => {
   );
 };
 
-export default MedicoItem;
+export default TurnoItem;

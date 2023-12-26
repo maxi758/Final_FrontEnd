@@ -45,13 +45,14 @@ const NavLinks = (props) => {
                 label: 'Listado de Medicos',
                 to: '/medicos',
               },
-              {
-                label: 'Editar Medico',
-                to: '/medicos/edit',
-              },
-              // Add more routes as needed
+
             ]}
           />
+        </li>
+      )}
+      {auth.isLoggedIn && (
+        <li>
+          <NavLink to="/turnos">Turnos</NavLink>
         </li>
       )}
       {!auth.isLoggedIn && (
