@@ -9,6 +9,7 @@ import Button from '../../shared/components/FormElements/Button';
 import { useHttpClient } from '../../hooks/http-hook';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import './PlaceForm.css';
 
 const UpdateMedico = (props) => {
   const auth = useContext(AuthContext);
