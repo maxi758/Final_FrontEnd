@@ -109,8 +109,8 @@ const UpdateMedico = (props) => {
       );
 
         //console.log(response.code);
-      return response;
-      //navigate('/medicos');
+      //return response;
+      navigate('/medicos');
     } catch (err) {
         console.log(err);
         //setError(err.message);

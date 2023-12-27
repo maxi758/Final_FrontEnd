@@ -76,8 +76,8 @@ const UpdateTurno = (props) => {
       );
 
         //console.log(response.code);
-      return response;
-      //navigate('/medicos');
+      //return response;
+      navigate('/turnos');
     } catch (err) {
         console.log(err);
         //setError(err.message);
