@@ -39,9 +39,29 @@ const TurnoItem = (props) => {
     } catch (err) {}
   };
 
+  const asignarTurnoHandler = async () => {
+    try {
+      await sendRequest(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${
+          props.id
+        }/reservar`,
+        'PATCH',
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token,
+        }
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
+  };
+
+  if (error) {
+    <ErrorModal error={error.message} code={error.code} onClear={clearError} />;
+  }
+
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      {/* <ErrorModal error={error} onClear={clearError} /> */}
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
@@ -74,13 +94,16 @@ const TurnoItem = (props) => {
             <p>{props.observaciones}</p>
           </div>
           <div className="product-item__actions">
-            {auth.rol === 'ADMIN'  && (
+            {auth.rol === 'ADMIN' && (
               <Button to={`/turnos/${props.id}`}>EDITAR</Button>
             )}
             {auth.rol === 'ADMIN' && (
               <Button danger onClick={showDeleteWarningHandler}>
                 ELIMINAR
               </Button>
+            )}
+            {auth.rol === 'PACIENTE' && (
+              <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
             )}
           </div>
         </Card>
