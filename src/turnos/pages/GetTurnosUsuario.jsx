@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext,  useParams, useRouteMatch  } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, useMatch } from 'react-router-dom';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
@@ -10,8 +11,10 @@ const Turnos = () => {
   const auth = useContext(AuthContext);
   const pacienteId = auth.userId;
   const {id} = useParams();
-  const match = useRouteMatch();
-  const estado = match.path.endsWith('cancelados') ? 'CANCELADO' : 'ASIGNADO';
+  const match = useMatch('/turnos/me/cancelados');
+  console.log('match', match);
+  const estado = (match?.pathname?.endsWith('cancelados')??false) ? 'CANCELADO' : 'ASIGNADO';
+  console.log('estado', estado);
   const [loadedTurnos, setLoadedTurnos] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -20,9 +23,9 @@ const Turnos = () => {
       try {
         console.log('fetching Turnos');
         const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/pacientes/${pacienteId}`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/pacientes/${pacienteId}?estado=${estado}`,
           'GET',
-          {estado},
+          null,
           {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + auth.token,
@@ -35,7 +38,7 @@ const Turnos = () => {
       }
     };
     fetchTurnos();
-  }, [sendRequest]);
+  }, [sendRequest, estado]);
 
   const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>

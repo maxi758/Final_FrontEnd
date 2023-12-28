@@ -78,6 +78,10 @@ const NavLinks = (props) => {
                 to: '/turnos/me',
               },
               {
+                label: 'Turnos Cancelados',
+                to: '/turnos/me/cancelados',
+              },
+              {
                 label: 'Listado de Turnos',
                 to: '/turnos',
               },

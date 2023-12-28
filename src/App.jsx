@@ -49,6 +49,7 @@ const App = () => {
         <Route path='/turnos/new' element={<NewTurno />} />
         <Route path='/turnos/:id' element={<UpdateTurno />} />
         <Route path='/turnos/me' element={<MyTurnos />} />
+        <Route path='/turnos/me/cancelados' element={<MyTurnos />} />
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos" element={<Medicos />} />
         <Route path="/medicos/new" element={<NewMedico />} />
