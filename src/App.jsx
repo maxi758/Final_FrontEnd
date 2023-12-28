@@ -22,6 +22,7 @@ const Recover = React.lazy(() => import('./usuarios/pages/updateUser'));
 const Turnos = React.lazy(() => import('./turnos/pages/GetTurnos'));
 const NewTurno = React.lazy(() => import('./turnos/pages/NewTurno'));
 const UpdateTurno = React.lazy(() => import('./turnos/pages/UpdateTurno'));
+const MyTurnos = React.lazy(() => import('./turnos/pages/GetTurnosUsuario'));
 
 const App = () => {
   const { token, login, logout, userId, rol } = useAuth();
@@ -47,6 +48,7 @@ const App = () => {
         <Route path='/turnos' element={<Turnos />} />
         <Route path='/turnos/new' element={<NewTurno />} />
         <Route path='/turnos/:id' element={<UpdateTurno />} />
+        <Route path='/turnos/me' element={<MyTurnos />} />
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos" element={<Medicos />} />
         <Route path="/medicos/new" element={<NewMedico />} />

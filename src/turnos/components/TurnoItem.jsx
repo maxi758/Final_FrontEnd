@@ -55,6 +55,22 @@ const TurnoItem = (props) => {
     } catch (err) {}
   };
 
+  const cancelTurnoHandler = async () => {
+    try {
+      await sendRequest(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${
+          props.id
+        }/cancelar`,
+        'PATCH',
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token,
+        }
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
+  };
+
   if (error) {
     <ErrorModal error={error.message} code={error.code} onClear={clearError} />;
   }
@@ -102,8 +118,13 @@ const TurnoItem = (props) => {
                 ELIMINAR
               </Button>
             )}
-            {auth.rol === 'PACIENTE' && (
+            {auth.rol === 'PACIENTE' && !props.isMyTurnos && (
               <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
+            )}
+            {auth.rol === 'PACIENTE' && props.isMyTurnos && (
+              <Button danger onClick={cancelTurnoHandler}>
+                CANCELAR
+              </Button>
             )}
           </div>
         </Card>

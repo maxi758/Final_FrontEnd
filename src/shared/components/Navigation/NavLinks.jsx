@@ -70,7 +70,20 @@ const NavLinks = (props) => {
       )}
       {auth.rol === 'PACIENTE' && (
         <li>
-          <NavLink to="/turnos">Turnos</NavLink>
+          <BasicMenu
+            buttonLabel={'Turnos'}
+            options={[
+              {
+                label: 'Mis Turnos',
+                to: '/turnos/me',
+              },
+              {
+                label: 'Listado de Turnos',
+                to: '/turnos',
+              },
+
+            ]}
+          />
         </li>
       )}
       {!auth.isLoggedIn && (
