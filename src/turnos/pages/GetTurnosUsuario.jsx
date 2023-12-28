@@ -81,7 +81,7 @@ const Turnos = () => {
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
       {!isLoading && loadedTurnos && (
-        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} isMyTurnos={true} />
+        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} isMyTurnos={true} selectedEstado={estado} />
       )}
     </React.Fragment>
   );

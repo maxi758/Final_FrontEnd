@@ -40,6 +40,7 @@ const TurnoList = (props) => {
             observaciones={turno.observaciones}
             onDelete={props.onDeleteMedico}
             isMyTurnos={props.isMyTurnos ? true : false}
+            selectedEstado={props.selectedEstado}
           />
         ))}
       </ul>

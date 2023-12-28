@@ -121,7 +121,7 @@ const TurnoItem = (props) => {
             {auth.rol === 'PACIENTE' && !props.isMyTurnos && (
               <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
             )}
-            {auth.rol === 'PACIENTE' && props.isMyTurnos && (
+            {auth.rol === 'PACIENTE' && props.isMyTurnos && props.selectedEstado === 'ASIGNADO' && (
               <Button danger onClick={cancelTurnoHandler}>
                 CANCELAR
               </Button>
