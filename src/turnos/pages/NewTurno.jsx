@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -14,9 +14,14 @@ import '../../medicos/pages/PlaceForm.css';
 const NewTurno = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [medicos, setMedicos] = useState([]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       fecha: {
+        value: '',
+        isValid: false,
+      },
+      hora: {
         value: '',
         isValid: false,
       },
@@ -34,20 +39,55 @@ const NewTurno = () => {
 
   const navigate = useNavigate(); // useNavigate es un hook que nos da react-router-dom para redireccionar, tiene la misma funcionalidad que useHistory
 
+  useEffect(() => {
+    const fetchMedicos = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`,
+          'GET',
+          null,
+          {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + auth.token,
+          }
+        );
+        setMedicos(responseData.medicos);
+
+        setFormData(
+          {
+            ...formState.inputs,
+            medico: {
+              value: responseData.medicos[0].id,
+              isValid: true,
+            },
+          },
+          true
+        );
+      } catch (err) {}
+    };
+
+    fetchMedicos();
+  }, [sendRequest, auth.token]);
+
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
       const formData = new FormData();
       formData.append('fecha', formState.inputs.fecha.value);
+      formData.append('hora', formState.inputs.hora.value);
       formData.append('observaciones', formState.inputs.observaciones.value);
       formData.append('medico', formState.inputs.medico.value);
+
+      const date = formState.inputs.fecha.value;
+      const time = formState.inputs.hora.value;
+      const fecha = new Date(`${date} ${time}`);
 
       console.log(formState);
       await sendRequest(
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos`,
         'POST',
         JSON.stringify({
-          fecha: formState.inputs.fecha.value,
+          fecha,
           observaciones: formState.inputs.observaciones.value,
           medico: formState.inputs.medico.value,
         }),
@@ -80,9 +120,18 @@ const NewTurno = () => {
           name="fecha"
           element="input"
           type="date"
-          label="Nombre"
+          label="Fecha"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Por favor ingrese una fecha valida."
+          onInput={inputHandler}
+        />
+        <Input
+          id="hora"
+          element="input"
+          type="time"
+          label="Hora"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Por favor ingrese una hora valida."
           onInput={inputHandler}
         />
         <Input
@@ -96,13 +145,18 @@ const NewTurno = () => {
         />
         <Input
           id="medico"
-          element="input"
-          type="text"
+          element="select"
           label="Medico"
           validators={[VALIDATOR_REQUIRE()]}
-          errorText="Por favor ingrese un id de médico valido."
+          errorText="Por favor seleccione un médico."
           onInput={inputHandler}
-        />
+        >
+          {medicos.map((medico) => (
+            <option key={medico.id} value={medico.id}>
+              {medico.nombre} {medico.apellido}
+            </option>
+          ))}
+        </Input>
         <Button type="submit" disabled={!formState.isValid}>
           Agregar Turno
         </Button>
