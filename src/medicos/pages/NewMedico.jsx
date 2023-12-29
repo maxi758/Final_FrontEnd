@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -13,6 +13,7 @@ import './PlaceForm.css';
 
 const NewMedico = () => {
   const auth = useContext(AuthContext);
+  const [especialidades, setEspecialidades] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -38,6 +39,36 @@ const NewMedico = () => {
 
   const navigate = useNavigate(); // useNavigate es un hook que nos da react-router-dom para redireccionar, tiene la misma funcionalidad que useHistory
 
+  useEffect(() => {
+    const fetchEspecialidades = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`,
+          'GET',
+          null,
+          {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + auth.token,
+          }
+        );
+        setEspecialidades(responseData.especialidades);
+
+        setFormData(
+          {
+            ...formState.inputs,
+            especialidad: {
+              value: responseData.especialidad[0].id,
+              isValid: true,
+            },
+          },
+          true
+        );
+      } catch (err) {}
+    };
+
+    fetchEspecialidades();
+  }, [sendRequest, auth.token]);
+
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
@@ -47,7 +78,7 @@ const NewMedico = () => {
       formData.append('matricula', formState.inputs.matricula.value);
       formData.append('especialidad', formState.inputs.especialidad.value); // el value es el archivo
 
-      console.log(formState)
+      console.log(formState);
       await sendRequest(
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`,
         'POST',
@@ -69,7 +100,7 @@ const NewMedico = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      <form method='POST' className="place-form" onSubmit={placeSubmitHandler}>
+      <form method="POST" className="place-form" onSubmit={placeSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input
           id="nombre"
@@ -85,7 +116,7 @@ const NewMedico = () => {
           id="apellido"
           element="textarea"
           label="Apellido"
-          validators={[VALIDATOR_MINLENGTH(5)]}
+          validators={[VALIDATOR_MINLENGTH(2)]}
           errorText="Por favor ingrese un apellido valido."
           onInput={inputHandler}
         />
@@ -100,13 +131,18 @@ const NewMedico = () => {
         />
         <Input
           id="especialidad"
-          element="input"
-          type="text"
+          element="select"
           label="Especialidad"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Por favor ingrese una especialidad valida."
           onInput={inputHandler}
-        />
+        >
+          {especialidades.map((especialidad) => (
+            <option key={especialidad.id} value={especialidad.id}>
+              {especialidad.nombre}
+            </option>
+          ))}
+        </Input>
         <Button type="submit" disabled={!formState.isValid}>
           Agregar Medico
         </Button>
