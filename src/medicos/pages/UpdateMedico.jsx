@@ -16,6 +16,7 @@ const UpdateMedico = (props) => {
   const navigate = useNavigate();
   const medicoId = useParams().id;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [especialidades, setEspecialidades] = useState({});
   const [isLoadingMedico, setIsLoadingMedico] = useState(true);
   const [loadedMedico, setLoadedMedico] = useState({
     nombre: props.nombre,
@@ -48,6 +49,17 @@ const UpdateMedico = (props) => {
   useEffect(() => {
     const fetchMedico = async () => {
       try {
+        const especialidadData = await sendRequest(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`,
+          'GET',
+          null,
+          {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + auth.token,
+          }
+        );
+        console.log(especialidadData.especialidades);
+        setEspecialidades(especialidadData.especialidades);
         console.log(medicoId);
         const responseData = await sendRequest(
           `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
@@ -79,7 +91,9 @@ const UpdateMedico = (props) => {
           true
         );
         setIsLoadingMedico(false);
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     };
     fetchMedico();
   }, [sendRequest, medicoId, setFormData, auth.token]);
@@ -171,15 +185,20 @@ const UpdateMedico = (props) => {
         />
         <Input
           id="especialidad"
-          element="input"
-          type="text"
+          element="select"
           label="Especialidad"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Por favor, ingrese una especialidad válida."
           onInput={inputHandler}
           initialValue={loadedMedico.especialidad}
           initialValid={true}
-        />
+        >
+          {especialidades.map((especialidad) => (
+            <option key={especialidad.id} value={especialidad.id}>
+              {especialidad.nombre}
+            </option>
+          ))}
+        </Input>
         <Button type="submit" disabled={!formState.isValid}>
           ACTUALIZAR MEDICO
         </Button>
