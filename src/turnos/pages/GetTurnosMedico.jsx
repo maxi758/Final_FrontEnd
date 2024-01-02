@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
@@ -7,9 +7,7 @@ import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { AuthContext } from '../../context/auth-context';
 
-const Turnos = (props) => {
-  const location = useLocation();
-  console.log('props', location);
+const Turnos = () => {
   const auth = useContext(AuthContext);
   const medicoId = useParams().id;
   const [loadedTurnos, setLoadedTurnos] = useState();
@@ -55,14 +53,6 @@ const Turnos = (props) => {
   }
   
   return (
-    // <React.Fragment>
-    //     {isLoading && (
-    //         <div className="center">
-    //             <CircularProgress />
-    //         </div>
-    //     )}
-    //     {!isLoading && loadedTurnos && <MedicoList items={loadedTurnos} />}
-    // </React.Fragment>
     <React.Fragment>
       {isLoading && (
         <div className="center">
@@ -78,7 +68,7 @@ const Turnos = (props) => {
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
       {!isLoading && loadedTurnos && (
-        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} isMyTurnos={props.isMyTurnos || false} />
+        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} isMyTurnos={false} />
       )}
     </React.Fragment>
   );
