@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-
+import { Link } from 'react-router-dom';
 import { Card, CircularProgress } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
@@ -74,7 +74,18 @@ const MedicoItem = (props) => {
             <p>{props.especialidad.nombre}</p>
           </div>
           <div className="product-item__actions">
-            {auth.rol === 'ADMIN'  && (
+            <Button
+              component={Link}
+              to={{
+                pathname: `/turnos/medicos/${props.id}`,
+                state: { isMyTurnos: false },
+              }}
+            >
+              TURNOS
+            </Button>
+          </div>
+          <div className="product-item__actions">
+            {auth.rol === 'ADMIN' && (
               <Button to={`/medicos/${props.id}`}>EDITAR</Button>
             )}
             {auth.rol === 'ADMIN' && (
