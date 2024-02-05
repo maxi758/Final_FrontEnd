@@ -12,8 +12,11 @@ import { useAuth } from './hooks/auth-hook';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { CircularProgress } from '@mui/material';
 
+// const Especialidades = React.lazy(() =>
+//   import('./especialidades/pages/GetEspecialidades')
+// );
 const Especialidades = React.lazy(() =>
-  import('./especialidades/pages/GetEspecialidades')
+  import('./redux/containers/especialidades_list')
 );
 const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
 const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
