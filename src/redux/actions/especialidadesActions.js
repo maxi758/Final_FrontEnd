@@ -1,21 +1,25 @@
 import axios from 'axios';
 
+export const FETCH_ESPECIALIDADES_START = 'FETCH_ESPECIALIDADES_START';
+export const FETCH_ESPECIALIDADES_SUCCESS = 'FETCH_ESPECIALIDADES_SUCCESS';
+export const FETCH_ESPECIALIDADES_FAIL = 'FETCH_ESPECIALIDADES_FAIL';
+
 export const fetchEspecialidadesStart = () => {
   return {
-    type: 'FETCH_ESPECIALIDADES_START',
+    type: FETCH_ESPECIALIDADES_START,
   };
 };
 
 export const fetchEspecialidadesSuccess = (especialidades) => {
   return {
-    type: 'FETCH_ESPECIALIDADES_SUCCESS',
+    type: FETCH_ESPECIALIDADES_SUCCESS,
     payload: especialidades,
   };
 };
 
 export const fetchEspecialidadesFail = (error) => {
   return {
-    type: 'FETCH_ESPECIALIDADES_FAIL',
+    type: FETCH_ESPECIALIDADES_FAIL,
     payload: error,
   };
 };
