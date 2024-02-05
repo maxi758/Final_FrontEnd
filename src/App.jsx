@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import {
   BrowserRouter as Router,
   Route,
@@ -40,18 +41,17 @@ const App = () => {
       </Routes>
     );
   } else {
-    
     console.log('userId: ', userId);
     console.log('rol: ', rol);
     routes = (
       <Routes>
         <Route path="/recover" element={<Recover />} />
-        <Route path='/turnos' element={<Turnos />} />
-        <Route path='/turnos/new' element={<NewTurno />} />
-        <Route path='/turnos/:id' element={<UpdateTurno />} />
-        <Route path='/turnos/me' element={<MyTurnos />} />
-        <Route path='/turnos/me/cancelados' element={<MyTurnos />} />
-        <Route path='/turnos/medicos/:id' element={<TurnosMedico />} />
+        <Route path="/turnos" element={<Turnos />} />
+        <Route path="/turnos/new" element={<NewTurno />} />
+        <Route path="/turnos/:id" element={<UpdateTurno />} />
+        <Route path="/turnos/me" element={<MyTurnos />} />
+        <Route path="/turnos/me/cancelados" element={<MyTurnos />} />
+        <Route path="/turnos/medicos/:id" element={<TurnosMedico />} />
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos" element={<Medicos />} />
         <Route path="/medicos/new" element={<NewMedico />} />
@@ -64,25 +64,33 @@ const App = () => {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn: !!token,
-        token: token,
-        userId: userId,
-        rol: rol,
-        login: login,
-        logout: logout,
-      }}
-    >
-      <Router>
-        <MainNavigation />
-        <main>
-          <React.Suspense fallback={<div className="center"><CircularProgress /></div>}>
-            {routes}
-          </React.Suspense>
-        </main>
-      </Router>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider
+        value={{
+          isLoggedIn: !!token,
+          token: token,
+          userId: userId,
+          rol: rol,
+          login: login,
+          logout: logout,
+        }}
+      >
+        <Router>
+          <MainNavigation />
+          <main>
+            <React.Suspense
+              fallback={
+                <div className="center">
+                  <CircularProgress />
+                </div>
+              }
+            >
+              {routes}
+            </React.Suspense>
+          </main>
+        </Router>
+      </AuthContext.Provider>
+    </Provider>
   );
 };
 

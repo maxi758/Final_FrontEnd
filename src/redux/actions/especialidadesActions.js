@@ -20,7 +20,7 @@ export const fetchEspecialidadesFail = (error) => {
   };
 };
 
-export const fetchEspecialidades = async (url, token) => {
+export const fetchEspecialidades = (url, token) => {
   return async (dispatch) => {
     dispatch(fetchEspecialidadesStart());
     try {
@@ -31,8 +31,8 @@ export const fetchEspecialidades = async (url, token) => {
           Authorization: 'Bearer ' + token,
         },
       });
-      console.log('Response from fetch', responseData.especialidades);
-      dispatch(fetchEspecialidadesSuccess(responseData));
+      console.log('Response from fetch', responseData.data.especialidades);
+      dispatch(fetchEspecialidadesSuccess(responseData.data.especialidades));
     } catch (err) {
       dispatch(fetchEspecialidadesFail(err));
     }

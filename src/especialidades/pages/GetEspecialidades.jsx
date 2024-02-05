@@ -3,6 +3,7 @@ import { CircularProgress } from '@mui/material';
 import EspecialidadList from '../components/EspecialidadList';
 import { AuthContext } from '../../context/auth-context';
 import { fetchEspecialidades } from '../../redux/actions/especialidadesActions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Especialidades = () => {
   const dispatch = useDispatch();

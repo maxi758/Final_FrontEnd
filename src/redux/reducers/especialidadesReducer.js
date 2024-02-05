@@ -2,7 +2,7 @@ const initial_state = {
   especialidadesList: [],
 };
 
-const especialidades_reducer = (state = default_especialidades, action) => {
+const especialidades_reducer = (state = initial_state, action) => {
   switch (action.type) {
     case 'FETCH_ESPECIALIDADES_START':
       return { ...state, isLoading: true };
