@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AuthContext } from '../../context/auth-context';
 import { useForm } from '../../hooks/form-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Input from '../../shared/components/FormElements/Input';
@@ -10,9 +9,10 @@ import { useHttpClient } from '../../hooks/http-hook';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
+import { useSelector } from 'react-redux';
 
 const UpdateMedico = (props) => {
-  const auth = useContext(AuthContext);
+  const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const medicoId = useParams().id;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -55,7 +55,7 @@ const UpdateMedico = (props) => {
           null,
           {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
+            Authorization: 'Bearer ' + token,
           }
         );
         console.log(especialidadData.especialidades);
@@ -65,7 +65,7 @@ const UpdateMedico = (props) => {
           `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
           'GET',
           null,
-          { Authorization: 'Bearer ' + auth.token }
+          { Authorization: 'Bearer ' + token }
         );
         console.log(responseData.medico);
         setLoadedMedico(responseData.medico);
@@ -96,7 +96,7 @@ const UpdateMedico = (props) => {
       }
     };
     fetchMedico();
-  }, [sendRequest, medicoId, setFormData, auth.token]);
+  }, [sendRequest, medicoId, setFormData, token]);
 
   const medicoUpdateSubmitHandler = async (event) => {
     event.preventDefault();
@@ -118,7 +118,7 @@ const UpdateMedico = (props) => {
         }),
         {
           'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + auth.token,
+          Authorization: 'Bearer ' + token,
         }
       );
 

@@ -11,13 +11,14 @@ import {
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import { AuthContext } from '../../context/auth-context';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { register, login } from '../../redux/reducers/authReducer';
 
 import './Auth.css';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
+  const { token, rol} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -81,7 +82,7 @@ const Auth = () => {
         }),
         {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + auth.token,
+          Authorization: 'Bearer ' + token,
         }
       );
       console.log(responseData);
@@ -271,7 +272,7 @@ const Auth = () => {
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
-          {!isLoginMode && auth.rol === 'ADMIN' && (
+          {!isLoginMode && rol === 'ADMIN' && (
             <Button
               type="submit"
               onClick={createAdminHandler}

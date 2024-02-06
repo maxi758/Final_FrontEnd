@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import MedicoList from '../components/MedicoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { AuthContext } from '../../context/auth-context';
+import { useSelector } from 'react-redux';
 
 const Medicos = () => {
-  const auth = useContext(AuthContext);
+  const { token } = useSelector((state) => state.auth);
   const [loadedMedicos, setLoadedMedicos] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -22,7 +22,7 @@ const Medicos = () => {
           null,
           {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
+            Authorization: 'Bearer ' + token,
           }
         );
         console.log('Response from fetch', responseData.medicos);

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -8,11 +8,10 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
-import { AuthContext } from '../../context/auth-context';
 import './PlaceForm.css';
 
 const NewMedico = () => {
-  const auth = useContext(AuthContext);
+  const { token } = useSelector((state) => state.auth);
   const [especialidades, setEspecialidades] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
@@ -48,7 +47,7 @@ const NewMedico = () => {
           null,
           {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
+            Authorization: 'Bearer ' + token,
           }
         );
         setEspecialidades(responseData.especialidades);
@@ -67,7 +66,7 @@ const NewMedico = () => {
     };
 
     fetchEspecialidades();
-  }, [sendRequest, auth.token]);
+  }, [sendRequest, token]);
 
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
@@ -90,7 +89,7 @@ const NewMedico = () => {
         }),
         {
           'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + auth.token, // el token lo obtenemos del context
+          Authorization: 'Bearer ' + token, 
         }
       );
       navigate('/'); // redirecciona al home
