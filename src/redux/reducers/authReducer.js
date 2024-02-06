@@ -48,6 +48,11 @@ export const login = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk('auth/logout', async () => {
+  localStorage.removeItem('userData');
+  return null;
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -69,6 +74,15 @@ const authSlice = createSlice({
         state.rol = action.payload.usuario.rol;
       })
       .addCase(login.rejected, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.isLoggedIn = false;
+        state.userId = null;
+        state.token = null;
+        state.rol = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
         console.log(action.payload);
       });
   },

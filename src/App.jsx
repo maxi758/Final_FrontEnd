@@ -30,7 +30,12 @@ const MyTurnos = React.lazy(() => import('./turnos/pages/GetTurnosUsuario'));
 const TurnosMedico = React.lazy(() => import('./turnos/pages/GetTurnosMedico'));
 
 const App = () => {
-  const { token, login, logout, userId, rol } = useAuth();
+  //const { token, login, logout, userId, rol } = useAuth();
+  console.log(store.getState());
+  const { especialidades, isLoading } = store.getState().especialidades;
+  console.log('especialidades: ', especialidades);
+  console.log('isLoading: ', isLoading);
+  const {isLoggedIn, userId, token, rol} = store.getState().auth;
   let routes;
   console.log('token: ', token);
   if (!token) {
@@ -68,16 +73,16 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <AuthContext.Provider
+      {/* <AuthContext.Provider
         value={{
-          isLoggedIn: !!token,
+          isLoggedIn: isLoggedIn,
           token: token,
           userId: userId,
           rol: rol,
-          login: login,
-          logout: logout,
+          //login: login,
+          //logout: logout,
         }}
-      >
+      > */}
         <Router>
           <MainNavigation />
           <main>
@@ -92,7 +97,7 @@ const App = () => {
             </React.Suspense>
           </main>
         </Router>
-      </AuthContext.Provider>
+      {/* </AuthContext.Provider> */}
     </Provider>
   );
 };

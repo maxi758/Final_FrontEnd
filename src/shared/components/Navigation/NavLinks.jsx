@@ -1,23 +1,24 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom'; // NavLink is a special version of the <Link> component that will add styling attributes to the rendered element when it matches the current URL.
 import BasicMenu from './menu';
-import { AuthContext } from '../../../context/auth-context';
+import store  from '../../../redux/store';
+import { logout } from '../../../redux/reducers/authReducer';
 import './NavLinks.css';
 
 const NavLinks = (props) => {
-  const auth = useContext(AuthContext);
+  const {isLoggedIn, rol  } = store.getState()
 
   return (
     <ul className="nav-links">
       <li>
           <NavLink to="/recover">Cuenta</NavLink>
         </li>
-      {auth.rol === 'ADMIN' && (
+      {rol === 'ADMIN' && (
         <li>
           <NavLink to="/auth">Usuarios</NavLink>
         </li>
       )}
-      {auth.rol === 'PACIENTE' && (
+      {rol === 'PACIENTE' && (
         <li>
           <NavLink to="/">Medicos</NavLink>
         </li>
@@ -27,12 +28,12 @@ const NavLinks = (props) => {
           <NavLink to={`/${auth.userId}/especialidades`}>Especialidades</NavLink>
         </li>
       )} */}
-      {auth.isLoggedIn && (
+      {isLoggedIn && (
         <li>
           <NavLink to={`/especialidades`}>Especialidades</NavLink>
         </li>
       )}
-      {auth.rol === 'ADMIN' && (
+      {rol === 'ADMIN' && (
         <li>
           <BasicMenu
             buttonLabel={'Medicos'}
@@ -50,7 +51,7 @@ const NavLinks = (props) => {
           />
         </li>
       )}
-      {auth.rol === 'ADMIN' && (
+      {rol === 'ADMIN' && (
         <li>
           <BasicMenu
             buttonLabel={'Turnos'}
@@ -68,7 +69,7 @@ const NavLinks = (props) => {
           />
         </li>
       )}
-      {auth.rol === 'PACIENTE' && (
+      {rol === 'PACIENTE' && (
         <li>
           <BasicMenu
             buttonLabel={'Turnos'}
@@ -90,14 +91,14 @@ const NavLinks = (props) => {
           />
         </li>
       )}
-      {!auth.isLoggedIn && (
+      {!isLoggedIn && (
         <li>
           <NavLink to="/auth">AUTHENTICATE</NavLink>
         </li>
       )}
-      {auth.isLoggedIn && (
+      {isLoggedIn && (
         <li>
-          <button onClick={auth.logout}>LOGOUT</button>
+          <button onClick={logout}>LOGOUT</button>
         </li>
       )}
     </ul>
