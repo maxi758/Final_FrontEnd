@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const initial_state = {
+const initialState = {
   isLoggedIn: false,
   userId: null,
   token: null,
@@ -10,12 +10,39 @@ const initial_state = {
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (userData, url) => {
+  async (userData, thunkAPI) => {
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios`;
+    console.log(userData);
+    console.log(url);
     try {
-      const responseData = await axios.post(url, {
-        user: userData,
+      const response = await axios.post(url, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      return responseData.data.user;
-    } catch (error) {}
+      console.log(response.data);
+      return response.data.usuario;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  extraReducers: (builder) => {
+    builder
+      .addCase(register.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.userId = action.payload._id;
+        state.token = action.payload.token;
+        state.rol = action.payload.rol;
+      })
+      .addCase(register.rejected, (state, action) => {
+        console.log(action.payload);
+      });
+  },
+});
+
+export default authSlice.reducer;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -11,11 +11,15 @@ import {
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import { AuthContext } from '../../context/auth-context';
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/reducers/authReducer';
 
 import './Auth.css';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false); //
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -118,7 +122,7 @@ const Auth = () => {
       }
     } else {
       try {
-        const formData = new FormData(); // FormData es una clase de js que nos permite crear un objeto con clave-valor, donde la clave es el nombre del input y el valor es el archivo
+        /*const formData = new FormData(); // FormData es una clase de js que nos permite crear un objeto con clave-valor, donde la clave es el nombre del input y el valor es el archivo
         formData.append('nombre', formState.inputs.nombre.value);
         formData.append('apellido', formState.inputs.apellido.value);
         formData.append('dni', formState.inputs.dni.value);
@@ -140,7 +144,32 @@ const Auth = () => {
           }
         );
         console.log(responseData);
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.userId, responseData.token);*/
+        
+        dispatch(
+          register(
+            {
+              nombre: formState.inputs.nombre.value,
+              apellido: formState.inputs.apellido.value,
+              dni: formState.inputs.dni.value,
+              email: formState.inputs.email.value,
+              password: formState.inputs.password.value,
+            },
+          )
+        ).then((action) => {
+          const remainingTime = 60 * 60 * 1000; // 1 hora
+          const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
+          localStorage.setItem(
+            'userData',
+            JSON.stringify({
+              userId: action.payload._id,
+              token: action.payload.token,
+              rol: action.payload.rol,
+              expiration: expiryDate.toISOString(),
+            })
+          );
+          navigate('/');
+        });
       } catch (err) {
         console.log(err);
       }
