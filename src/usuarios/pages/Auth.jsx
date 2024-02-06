@@ -12,7 +12,7 @@ import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import { AuthContext } from '../../context/auth-context';
 import { useDispatch } from 'react-redux';
-import { register } from '../../redux/reducers/authReducer';
+import { register, login } from '../../redux/reducers/authReducer';
 
 import './Auth.css';
 
@@ -97,7 +97,7 @@ const Auth = () => {
 
     if (isLoginMode) {
       try {
-        const responseData = await sendRequest(
+        /*const responseData = await sendRequest(
           `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/login`,
           'POST',
           JSON.stringify({
@@ -116,7 +116,26 @@ const Auth = () => {
           responseData.token,
           responseData.usuario.rol
         );
-        setIsAuthenticated(true);
+        setIsAuthenticated(true);*/
+        dispatch(
+          login({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          })
+        ).then((action) => {
+          const remainingTime = 60 * 60 * 1000; // 1 hora
+          const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
+          localStorage.setItem(
+            'userData',
+            JSON.stringify({
+              userId: action.payload.usuario._id,
+              token: action.payload.token,
+              rol: action.payload.usuario.rol,
+              expiration: expiryDate.toISOString(),
+            })
+          );
+          navigate('/');
+        });
       } catch (err) {
         console.log(err);
       }
@@ -145,17 +164,15 @@ const Auth = () => {
         );
         console.log(responseData);
         auth.login(responseData.userId, responseData.token);*/
-        
+
         dispatch(
-          register(
-            {
-              nombre: formState.inputs.nombre.value,
-              apellido: formState.inputs.apellido.value,
-              dni: formState.inputs.dni.value,
-              email: formState.inputs.email.value,
-              password: formState.inputs.password.value,
-            },
-          )
+          register({
+            nombre: formState.inputs.nombre.value,
+            apellido: formState.inputs.apellido.value,
+            dni: formState.inputs.dni.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          })
         ).then((action) => {
           const remainingTime = 60 * 60 * 1000; // 1 hora
           const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
