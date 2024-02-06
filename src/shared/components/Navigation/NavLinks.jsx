@@ -2,12 +2,15 @@ import React from 'react';
 import { NavLink } from 'react-router-dom'; // NavLink is a special version of the <Link> component that will add styling attributes to the rendered element when it matches the current URL.
 import BasicMenu from './menu';
 import store  from '../../../redux/store';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/reducers/authReducer';
 import './NavLinks.css';
 
 const NavLinks = (props) => {
-  const {isLoggedIn, rol  } = store.getState()
-
+  const {isLoggedIn, rol  } = store.getState().auth;
+  const dispatch = useDispatch();
+  console.log('isLoggedIn: ', isLoggedIn);
+  console.log('rol: ', rol);
   return (
     <ul className="nav-links">
       <li>
@@ -98,7 +101,7 @@ const NavLinks = (props) => {
       )}
       {isLoggedIn && (
         <li>
-          <button onClick={logout}>LOGOUT</button>
+          <button onClick={ () => dispatch(logout)}>LOGOUT</button>
         </li>
       )}
     </ul>

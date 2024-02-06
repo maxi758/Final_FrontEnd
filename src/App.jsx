@@ -1,5 +1,5 @@
 import React from 'react';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from './redux/store';
 import {
   BrowserRouter as Router,
@@ -7,8 +7,6 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
-import { AuthContext } from './context/auth-context';
-import { useAuth } from './hooks/auth-hook';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { CircularProgress } from '@mui/material';
 
@@ -30,15 +28,10 @@ const MyTurnos = React.lazy(() => import('./turnos/pages/GetTurnosUsuario'));
 const TurnosMedico = React.lazy(() => import('./turnos/pages/GetTurnosMedico'));
 
 const App = () => {
-  //const { token, login, logout, userId, rol } = useAuth();
-  console.log(store.getState());
-  const { especialidades, isLoading } = store.getState().especialidades;
-  console.log('especialidades: ', especialidades);
-  console.log('isLoading: ', isLoading);
-  const {isLoggedIn, userId, token, rol} = store.getState().auth;
+  const { isLoggedIn, userId, token, rol } = useSelector((state) => state.auth);
   let routes;
   console.log('token: ', token);
-  if (!token) {
+  if (!isLoggedIn) {
     routes = (
       <Routes>
         <Route path="/auth" element={<Auth />} />
@@ -65,40 +58,27 @@ const App = () => {
         <Route path="/medicos/new" element={<NewMedico />} />
         <Route path="/medicos/:id" element={<EditMedico />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/" element={<Navigate to="/medicos" />} />
-        <Route path="*" element={<Navigate to="/medicos" />} />
+        <Route path="/" element={<Navigate to="/especialidades" />} />
+        <Route path="*" element={<Navigate to="/especialidades" />} />
       </Routes>
     );
   }
 
   return (
-    <Provider store={store}>
-      {/* <AuthContext.Provider
-        value={{
-          isLoggedIn: isLoggedIn,
-          token: token,
-          userId: userId,
-          rol: rol,
-          //login: login,
-          //logout: logout,
-        }}
-      > */}
-        <Router>
-          <MainNavigation />
-          <main>
-            <React.Suspense
-              fallback={
-                <div className="center">
-                  <CircularProgress />
-                </div>
-              }
-            >
-              {routes}
-            </React.Suspense>
-          </main>
-        </Router>
-      {/* </AuthContext.Provider> */}
-    </Provider>
+      <Router>
+        <MainNavigation />
+        <main>
+          <React.Suspense
+            fallback={
+              <div className="center">
+                <CircularProgress />
+              </div>
+            }
+          >
+            {routes}
+          </React.Suspense>
+        </main>
+      </Router>
   );
 };
 

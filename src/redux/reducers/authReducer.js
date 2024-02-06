@@ -82,9 +82,6 @@ const authSlice = createSlice({
         state.token = null;
         state.rol = null;
       })
-      .addCase(logout.rejected, (state, action) => {
-        console.log(action.payload);
-      });
   },
 });
 
