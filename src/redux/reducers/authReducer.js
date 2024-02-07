@@ -28,6 +28,27 @@ export const register = createAsyncThunk(
   }
 );
 
+export const createAdmin = createAsyncThunk(
+  'auth/createAdmin',
+  async (userData, token, thunkAPI) => {
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/admin`;
+    console.log(userData);
+    console.log(url);
+    try {
+      const response = await axios.post(url, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log(response.data);
+      return response.data.usuario;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const login = createAsyncThunk(
   'auth/login',
   async (userData, thunkAPI) => {
@@ -83,6 +104,15 @@ const authSlice = createSlice({
         state.token = null;
         state.rol = null;
       })
+      .addCase(createAdmin.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.userId = action.payload._id;
+        state.token = action.payload.token;
+        state.rol = action.payload.rol;
+      })
+      .addCase(createAdmin.rejected, (state, action) => {
+        console.log(action.payload);
+      });
   },
 });
 

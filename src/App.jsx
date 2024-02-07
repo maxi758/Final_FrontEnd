@@ -1,6 +1,5 @@
 import React from 'react';
-import { Provider, useSelector } from 'react-redux';
-import store from './redux/store';
+import { useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
@@ -16,10 +15,10 @@ import { CircularProgress } from '@mui/material';
 const Especialidades = React.lazy(() =>
   import('./redux/containers/especialidades_list')
 );
-const Medicos = React.lazy(() => import('./redux/containers/medicos_list'));
+const Medicos = React.lazy(() => import('./redux/containers/medicosContainer'));
 //const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
-const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
-const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
+//const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
+//const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
 //const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 const Auth = React.lazy(() => import('./redux/containers/authContainer'));
 const Recover = React.lazy(() => import('./usuarios/pages/updateUser'));
@@ -56,9 +55,9 @@ const App = () => {
         <Route path="/turnos/me/cancelados" element={<MyTurnos />} />
         <Route path="/turnos/medicos/:id" element={<TurnosMedico />} />
         <Route path="/especialidades" element={<Especialidades />} />
-        <Route path="/medicos" element={<Medicos />} />
-        <Route path="/medicos/new" element={<NewMedico />} />
-        <Route path="/medicos/:id" element={<EditMedico />} />
+        <Route path="/medicos/*" element={<Medicos />} />
+        {/* <Route path="/medicos/new" element={<NewMedico />} />
+        <Route path="/medicos/:id" element={<EditMedico />} /> */}
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<Navigate to="/especialidades" />} />
         <Route path="*" element={<Navigate to="/especialidades" />} />

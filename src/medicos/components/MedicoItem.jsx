@@ -1,17 +1,17 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CircularProgress } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import './ProductItem.css';
-import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 import Button from '../../shared/components/FormElements/Button';
+import { useSelector } from 'react-redux';
 
 const MedicoItem = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const auth = useContext(AuthContext);
+  const { token, rol } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [item, setItem] = useState({
     id: props.id,
@@ -33,7 +33,7 @@ const MedicoItem = (props) => {
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${props.id}`,
         'DELETE',
         null,
-        { Authorization: 'Bearer ' + auth.token }
+        { Authorization: 'Bearer ' + token }
       );
       props.onDelete(props.id);
     } catch (err) {}
@@ -85,10 +85,10 @@ const MedicoItem = (props) => {
             </Button>
           </div>
           <div className="product-item__actions">
-            {auth.rol === 'ADMIN' && (
+            {rol === 'ADMIN' && (
               <Button to={`/medicos/${props.id}`}>EDITAR</Button>
             )}
-            {auth.rol === 'ADMIN' && (
+            {rol === 'ADMIN' && (
               <Button danger onClick={showDeleteWarningHandler}>
                 ELIMINAR
               </Button>

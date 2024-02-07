@@ -14,11 +14,10 @@ import { useSelector } from 'react-redux';
 
 import './Auth.css';
 
-const Auth = ({ onLogin, onRegister }) => {
+const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
   const { token, rol } = useSelector((state) => state.auth);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); //
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient(); // falta adaptar a redux
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -64,28 +63,14 @@ const Auth = ({ onLogin, onRegister }) => {
 
   const createAdminHandler = async (event) => {
     event.preventDefault();
-    try {
-      const responseData = await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/admin`,
-        'POST',
-        JSON.stringify({
-          nombre: formState.inputs.nombre.value,
-          apellido: formState.inputs.apellido.value,
-          dni: formState.inputs.dni.value,
-          email: formState.inputs.email.value,
-          password: formState.inputs.password.value,
-        }),
-        {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        }
-      );
-      console.log(responseData);
-      //auth.login(responseData.userId, responseData.token);
-      setIsAuthenticated(true);
-    } catch (err) {
-      console.log(err);
-    }
+
+    onCreateAdmin(
+      formState.inputs.nombre.value,
+      formState.inputs.apellido.value,
+      formState.inputs.dni.value,
+      formState.inputs.email.value,
+      formState.inputs.password.value
+    );
   };
 
   const authSubmitHandler = async (event) => {
@@ -93,8 +78,6 @@ const Auth = ({ onLogin, onRegister }) => {
 
     if (isLoginMode) {
       onLogin(formState.inputs.email.value, formState.inputs.password.value);
-
-      //navigate('/');
     } else {
       onRegister(
         formState.inputs.nombre.value,
@@ -103,13 +86,7 @@ const Auth = ({ onLogin, onRegister }) => {
         formState.inputs.email.value,
         formState.inputs.password.value
       );
-      //navigate('/');
     }
-  };
-
-  const errorHandler = () => {
-    // se puede agregar clearError a errorModal
-    clearError();
   };
 
   if (error) {
@@ -124,7 +101,6 @@ const Auth = ({ onLogin, onRegister }) => {
   }
   return (
     <React.Fragment>
-      {isAuthenticated && <Navigate to="/" />}
       {/* <ErrorModal error={error.message} onClear={errorHandler} /> */}
       <Card className="authentication">
         {isLoading && <CircularProgress asOverlay />}

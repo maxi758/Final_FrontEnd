@@ -11,9 +11,10 @@ import { useHttpClient } from '../../hooks/http-hook';
 import './PlaceForm.css';
 import { useSelector } from 'react-redux';
 
-const NewMedico = () => {
+const NewMedico = ({ onCreateMedico }) => {
   const { token } = useSelector((state) => state.auth);
-  const [especialidades, setEspecialidades] = useState([]);
+  const { especialidades } = useSelector((state) => state.especialidades);
+  //const [especialidades, setEspecialidades] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -39,7 +40,7 @@ const NewMedico = () => {
 
   const navigate = useNavigate(); // useNavigate es un hook que nos da react-router-dom para redireccionar, tiene la misma funcionalidad que useHistory
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchEspecialidades = async () => {
       try {
         const responseData = await sendRequest(
@@ -67,34 +68,33 @@ const NewMedico = () => {
     };
 
     fetchEspecialidades();
-  }, [sendRequest, token]);
+  }, [sendRequest, token]);*/
+  useEffect(() => {
+    if (especialidades && especialidades.length > 0) {
+      setFormData(
+        {
+          ...formState.inputs,
+          especialidad: {
+            value: especialidades[0].id,
+            isValid: true,
+          },
+        },
+        true
+      );
+    }
+  }, [token, especialidades]);
 
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('nombre', formState.inputs.nombre.value);
-      formData.append('apellido', formState.inputs.apellido.value);
-      formData.append('matricula', formState.inputs.matricula.value);
-      formData.append('especialidad', formState.inputs.especialidad.value); // el value es el archivo
-
-      console.log(formState);
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`,
-        'POST',
-        JSON.stringify({
-          nombre: formState.inputs.nombre.value,
-          apellido: formState.inputs.apellido.value,
-          matricula: formState.inputs.matricula.value,
-          especialidad: formState.inputs.especialidad.value,
-        }),
-        {
-          'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + token, 
-        }
-      );
-      navigate('/'); // redirecciona al home
-    } catch (err) {}
+    console.log('formState.inputs: ', formState.inputs);
+    console.log('token: ', token);
+    onCreateMedico(
+      formState.inputs.nombre.value,
+      formState.inputs.apellido.value,
+      formState.inputs.matricula.value,
+      formState.inputs.especialidad.value,
+      token
+    );
   };
 
   return (

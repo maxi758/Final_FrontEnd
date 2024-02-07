@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 
 const initialState = {
   nombre: '',
@@ -32,9 +31,11 @@ export const getMedicos = createAsyncThunk(
 
 export const createMedico = createAsyncThunk(
   'medicos/createMedico',
-  async (formData, token, thunkAPI) => {
+  async ({formData, token}, thunkAPI) => {
     const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`;
     console.log(url);
+    console.log('form',formData);
+    console.log(token);
     try {
       const response = await axios.post(url, formData, {
         headers: {
@@ -43,7 +44,7 @@ export const createMedico = createAsyncThunk(
         },
       });
       console.log(response);
-      return response.data.medicos;
+      return response.data.medico;
     } catch (error) {
       console.log(error);
       return thunkAPI.rejectWithValue(error.response.data);
@@ -68,7 +69,7 @@ const medicosSlice = createSlice({
         console.log(action.payload);
       })
       .addCase(createMedico.fulfilled, (state, action) => {
-        state.medico = action.payload;
+        state.medicos.push(action.payload);
         return state;
       })
       .addCase(createMedico.rejected, (state, action) => {
