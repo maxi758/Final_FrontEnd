@@ -59,6 +59,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(register.fulfilled, (state, action) => {
+        // cambiar estas opciones, las dejé así para probar y agilizar el desarrollo
         state.isLoggedIn = true;
         state.userId = action.payload._id;
         state.token = action.payload.token;

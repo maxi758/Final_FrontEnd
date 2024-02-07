@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -10,17 +10,12 @@ import {
 } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
-import { AuthContext } from '../../context/auth-context';
-import { useDispatch, useSelector } from 'react-redux';
-import { register, login } from '../../redux/reducers/authReducer';
+import { useSelector } from 'react-redux';
 
 import './Auth.css';
 
 const Auth = ({ onLogin, onRegister }) => {
-  const auth = useContext(AuthContext);
   const { token, rol } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false); //
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -99,58 +94,16 @@ const Auth = ({ onLogin, onRegister }) => {
     if (isLoginMode) {
       onLogin(formState.inputs.email.value, formState.inputs.password.value);
 
-      navigate('/');
+      //navigate('/');
     } else {
-      try {
-        /*const formData = new FormData(); // FormData es una clase de js que nos permite crear un objeto con clave-valor, donde la clave es el nombre del input y el valor es el archivo
-        formData.append('nombre', formState.inputs.nombre.value);
-        formData.append('apellido', formState.inputs.apellido.value);
-        formData.append('dni', formState.inputs.dni.value);
-        formData.append('email', formState.inputs.email.value);
-        formData.append('password', formState.inputs.password.value);
-
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios`,
-          'POST',
-          JSON.stringify({
-            nombre: formState.inputs.nombre.value,
-            apellido: formState.inputs.apellido.value,
-            dni: formState.inputs.dni.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
-        );
-        console.log(responseData);
-        auth.login(responseData.userId, responseData.token);*/
-
-        dispatch(
-          register({
-            nombre: formState.inputs.nombre.value,
-            apellido: formState.inputs.apellido.value,
-            dni: formState.inputs.dni.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          })
-        ).then((action) => {
-          const remainingTime = 60 * 60 * 1000; // 1 hora
-          const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
-          localStorage.setItem(
-            'userData',
-            JSON.stringify({
-              userId: action.payload._id,
-              token: action.payload.token,
-              rol: action.payload.rol,
-              expiration: expiryDate.toISOString(),
-            })
-          );
-          navigate('/');
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      onRegister(
+        formState.inputs.nombre.value,
+        formState.inputs.apellido.value,
+        formState.inputs.dni.value,
+        formState.inputs.email.value,
+        formState.inputs.password.value
+      );
+      //navigate('/');
     }
   };
 

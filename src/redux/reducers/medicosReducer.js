@@ -56,8 +56,12 @@ const medicosSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
+      .addCase(getMedicos.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(getMedicos.fulfilled, (state, action) => {
         state.medicos = action.payload;
+        state.isLoading = false;
         return state;
       })
       .addCase(getMedicos.rejected, (state, action) => {
