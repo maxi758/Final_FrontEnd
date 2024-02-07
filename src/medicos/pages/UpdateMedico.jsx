@@ -11,19 +11,15 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
 import { useSelector } from 'react-redux';
 
-const UpdateMedico = (props) => {
+const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   const { token } = useSelector((state) => state.auth);
+  const { loadedMedico, isLoading } = useSelector((state) => state.medicos);
+  const { especialidades } = useSelector((state) => state.especialidades);
   const navigate = useNavigate();
   const medicoId = useParams().id;
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [especialidades, setEspecialidades] = useState({});
+  console.log('medicoId: ', medicoId);
+  const { error, sendRequest, clearError } = useHttpClient();
   const [isLoadingMedico, setIsLoadingMedico] = useState(true);
-  const [loadedMedico, setLoadedMedico] = useState({
-    nombre: props.nombre,
-    apellido: props.apellido,
-    matricula: props.matricula,
-    especialidad: props.especialidad,
-  });
   const [formState, inputHandler, setFormData] = useForm(
     {
       nombre: {
@@ -49,42 +45,23 @@ const UpdateMedico = (props) => {
   useEffect(() => {
     const fetchMedico = async () => {
       try {
-        const especialidadData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`,
-          'GET',
-          null,
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token,
-          }
-        );
-        console.log(especialidadData.especialidades);
-        setEspecialidades(especialidadData.especialidades);
-        console.log(medicoId);
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
-          'GET',
-          null,
-          { Authorization: 'Bearer ' + token }
-        );
-        console.log(responseData.medico);
-        setLoadedMedico(responseData.medico);
+        await onFindOneMedico(medicoId, token);
         setFormData(
           {
             nombre: {
-              value: responseData.medico.nombre,
+              value: loadedMedico.nombre,
               isValid: true,
             },
             apellido: {
-              value: responseData.medico.apellido,
+              value: loadedMedico.apellido,
               isValid: true,
             },
             matricula: {
-              value: responseData.medico.matricula,
+              value: loadedMedico.matricula,
               isValid: true,
             },
             especialidad: {
-              value: responseData.medico.especialidad,
+              value: loadedMedico.especialidad,
               isValid: true,
             },
           },
@@ -96,49 +73,33 @@ const UpdateMedico = (props) => {
       }
     };
     fetchMedico();
-  }, [sendRequest, medicoId, setFormData, token]);
+  }, [medicoId, setFormData, token]);
 
   const medicoUpdateSubmitHandler = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('nombre', formState.inputs.nombre.value);
-      formData.append('apellido', formState.inputs.apellido.value);
-      formData.append('matricula', formState.inputs.matricula.value);
-      formData.append('especialidad', formState.inputs.especialidad.value); // el value es el archivo
 
-      const response = await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
-        'PATCH',
-        JSON.stringify({
-          nombre: formState.inputs.nombre.value,
-          apellido: formState.inputs.apellido.value,
-          matricula: formState.inputs.matricula.value,
-          especialidad: formState.inputs.especialidad.value,
-        }),
-        {
-          'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + token,
-        }
-      );
-
-        //console.log(response.code);
-      //return response;
-      navigate('/medicos');
-    } catch (err) {
-        console.log(err);
-        //setError(err.message);
-    }
+    onUpdateMedico(
+      medicoId,
+      formState.inputs.nombre.value,
+      formState.inputs.apellido.value,
+      formState.inputs.matricula.value,
+      formState.inputs.especialidad.value,
+      token
+    );
   };
 
   if (error) {
     console.log(error);
     return (
-      <ErrorModal error={error.message} code={error.errorCode}  onClear={clearError} />
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={clearError}
+      />
     );
   }
 
-  if (isLoadingMedico) {
+  if (isLoading) {
     return (
       <div className="center">
         <LoadingSpinner />
