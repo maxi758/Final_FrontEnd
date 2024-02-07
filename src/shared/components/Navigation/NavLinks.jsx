@@ -101,7 +101,7 @@ const NavLinks = (props) => {
       )}
       {isLoggedIn && (
         <li>
-          <button onClick={ () => dispatch(logout)}>LOGOUT</button>
+          <button onClick={ () => dispatch(logout())}>LOGOUT</button>
         </li>
       )}
     </ul>

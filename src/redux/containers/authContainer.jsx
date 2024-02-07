@@ -1,9 +1,12 @@
 import React from 'react';
 import Auth from '../../usuarios/pages/Auth';
 import { useDispatch } from 'react-redux';
+import { login } from '../reducers/authReducer';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContainer = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loginHandler = (email, password) => {
     try {
       dispatch(
@@ -29,7 +32,7 @@ const AuthContainer = () => {
       console.log(err);
     }
   };
-  return <Auth loginHandler={loginHandler} />;
+  return <Auth onLogin={loginHandler} />;
 };
 
 export default AuthContainer;
