@@ -99,7 +99,7 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || !loadedMedico ) {
     return (
       <div className="center">
         <LoadingSpinner />

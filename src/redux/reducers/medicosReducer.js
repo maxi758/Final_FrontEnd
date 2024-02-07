@@ -79,7 +79,7 @@ export const createMedico = createAsyncThunk(
 export const updateMedico = createAsyncThunk(
   'medicos/updateMedico',
   async ({ formData, token }, thunkAPI) => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`;
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${formData.id}`;
     console.log(url);
     console.log('form', formData);
     console.log(token);
@@ -130,8 +130,8 @@ const medicosSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getMedicoById.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.loadedMedico = action.payload;
+        state.isLoading = false;
         return state;
       })
       .addCase(getMedicoById.rejected, (state, action) => {
@@ -141,8 +141,11 @@ const medicosSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateMedico.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.loadedMedico = action.payload;
+        state.medicos = state.medicos.map((medico) =>
+          medico._id === action.payload._id ? action.payload : medico
+        );
+        state.isLoading = false;
         return state;
       })
       .addCase(updateMedico.rejected, (state, action) => {
