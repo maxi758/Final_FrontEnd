@@ -16,9 +16,9 @@ import { register, login } from '../../redux/reducers/authReducer';
 
 import './Auth.css';
 
-const Auth = () => {
+const Auth = ({ onLogin, onRegister }) => {
   const auth = useContext(AuthContext);
-  const { token, rol} = useSelector((state) => state.auth);
+  const { token, rol } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -97,49 +97,9 @@ const Auth = () => {
     event.preventDefault();
 
     if (isLoginMode) {
-      try {
-        /*const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/login`,
-          'POST',
-          JSON.stringify({
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
-        );
-        console.log(responseData);
-        if (!responseData.usuario) throw new Error(responseData.message);
+      onLogin(formState.inputs.email.value, formState.inputs.password.value);
 
-        auth.login(
-          responseData.usuario._id,
-          responseData.token,
-          responseData.usuario.rol
-        );
-        setIsAuthenticated(true);*/
-        dispatch(
-          login({
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          })
-        ).then((action) => {
-          const remainingTime = 60 * 60 * 1000; // 1 hora
-          const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
-          localStorage.setItem(
-            'userData',
-            JSON.stringify({
-              userId: action.payload.usuario._id,
-              token: action.payload.token,
-              rol: action.payload.usuario.rol,
-              expiration: expiryDate.toISOString(),
-            })
-          );
-          navigate('/');
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      navigate('/');
     } else {
       try {
         /*const formData = new FormData(); // FormData es una clase de js que nos permite crear un objeto con clave-valor, donde la clave es el nombre del input y el valor es el archivo

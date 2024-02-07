@@ -9,6 +9,7 @@ import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import './PlaceForm.css';
+import { useSelector } from 'react-redux';
 
 const NewMedico = () => {
   const { token } = useSelector((state) => state.auth);

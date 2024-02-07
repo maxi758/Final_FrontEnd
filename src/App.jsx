@@ -16,7 +16,8 @@ import { CircularProgress } from '@mui/material';
 const Especialidades = React.lazy(() =>
   import('./redux/containers/especialidades_list')
 );
-const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
+const Medicos = React.lazy(() => import('./redux/containers/medicos_list'));
+//const Medicos = React.lazy(() => import('./medicos/pages/GetMedicos'));
 const NewMedico = React.lazy(() => import('./medicos/pages/NewMedico'));
 const EditMedico = React.lazy(() => import('./medicos/pages/UpdateMedico'));
 const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
