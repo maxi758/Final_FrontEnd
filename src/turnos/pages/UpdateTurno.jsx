@@ -1,7 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { AuthContext } from '../../context/auth-context';
 import { useForm } from '../../hooks/form-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Input from '../../shared/components/FormElements/Input';
@@ -10,16 +8,14 @@ import { useHttpClient } from '../../hooks/http-hook';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import '../../medicos/pages/PlaceForm.css';
+import { useSelector } from 'react-redux';
 
-const UpdateTurno = (props) => {
-  const auth = useContext(AuthContext);
+const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
+  const { token } = useSelector((state) => state.auth);
+  const { isLoading, loadedTurno } = useSelector((state) => state.turnos);
   const navigate = useNavigate();
   const turnoId = useParams().id;
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [isLoadingTurno, setIsLoadingTurno] = useState(true);
-  const [loadedTurno, setLoadedTurno] = useState({
-    observaciones: props.observaciones,
-  });
+  const { error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
       observaciones: {
@@ -33,65 +29,38 @@ const UpdateTurno = (props) => {
   useEffect(() => {
     const fetchTurno = async () => {
       try {
-        console.log(turnoId);
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${turnoId}`,
-          'GET',
-          null,
-          { Authorization: 'Bearer ' + auth.token }
-        );
-        console.log(responseData.turno);
-        setLoadedTurno(responseData.turno);
+        await onFindOneTurno(turnoId, token);
         setFormData(
           {
             observaciones: {
-              value: responseData.observaciones,
+              value: loadedTurno.observaciones,
               isValid: true,
             },
           },
           true
         );
-        setIsLoadingTurno(false);
       } catch (err) {}
     };
     fetchTurno();
-  }, [sendRequest, turnoId, setFormData, auth.token]);
+  }, [turnoId, token, setFormData]);
 
   const turnoUpdateSubmitHandler = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('observaciones', formState.inputs.observaciones.value);
-
-      const response = await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${turnoId}`,
-        'PATCH',
-        JSON.stringify({
-          observaciones: formState.inputs.observaciones.value,
-        }),
-        {
-          'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + auth.token,
-        }
-      );
-
-        //console.log(response.code);
-      //return response;
-      navigate('/turnos');
-    } catch (err) {
-        console.log(err);
-        //setError(err.message);
-    }
+    onUpdateTurno(turnoId, formState.inputs.observaciones.value, token);
   };
 
   if (error) {
     console.log(error);
     return (
-      <ErrorModal error={error.message} code={error.errorCode}  onClear={clearError} />
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={clearError}
+      />
     );
   }
 
-  if (isLoadingTurno) {
+  if (isLoading) {
     return (
       <div className="center">
         <LoadingSpinner />

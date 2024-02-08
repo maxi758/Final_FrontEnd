@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import { Card, CircularProgress } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import '../../medicos/components/ProductItem.css';
-import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 import Button from '../../shared/components/FormElements/Button';
@@ -13,7 +12,7 @@ import { useSelector } from 'react-redux';
 const TurnoItem = (props) => {
   const { isLoading } = useSelector((state) => state.turnos);
   const { error, sendRequest, clearError } = useHttpClient();
-  const auth = useContext(AuthContext);
+  const { token, rol } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [item, setItem] = useState({
     id: props.id,
@@ -35,7 +34,7 @@ const TurnoItem = (props) => {
         `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${props.id}`,
         'DELETE',
         null,
-        { Authorization: 'Bearer ' + auth.token }
+        { Authorization: 'Bearer ' + token }
       );
       props.onDelete(props.id);
     } catch (err) {}
@@ -50,7 +49,7 @@ const TurnoItem = (props) => {
         'PATCH',
         null,
         {
-          Authorization: 'Bearer ' + auth.token,
+          Authorization: 'Bearer ' + token,
         }
       );
       props.onDelete(props.id);
@@ -66,7 +65,7 @@ const TurnoItem = (props) => {
         'PATCH',
         null,
         {
-          Authorization: 'Bearer ' + auth.token,
+          Authorization: 'Bearer ' + token,
         }
       );
       props.onDelete(props.id);
@@ -112,22 +111,24 @@ const TurnoItem = (props) => {
             <p>{props.observaciones}</p>
           </div>
           <div className="product-item__actions">
-            {auth.rol === 'ADMIN' && (
+            {rol === 'ADMIN' && (
               <Button to={`/turnos/${props.id}`}>EDITAR</Button>
             )}
-            {auth.rol === 'ADMIN' && (
+            {rol === 'ADMIN' && (
               <Button danger onClick={showDeleteWarningHandler}>
                 ELIMINAR
               </Button>
             )}
-            {auth.rol === 'PACIENTE' && !props.isMyTurnos && (
+            {rol === 'PACIENTE' && !props.isMyTurnos && (
               <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
             )}
-            {auth.rol === 'PACIENTE' && props.isMyTurnos && props.selectedEstado === 'ASIGNADO' && (
-              <Button danger onClick={cancelTurnoHandler}>
-                CANCELAR
-              </Button>
-            )}
+            {rol === 'PACIENTE' &&
+              props.isMyTurnos &&
+              props.selectedEstado === 'ASIGNADO' && (
+                <Button danger onClick={cancelTurnoHandler}>
+                  CANCELAR
+                </Button>
+              )}
           </div>
         </Card>
       </li>

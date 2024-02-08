@@ -62,7 +62,7 @@ const NewTurno = ({ onCreateTurno }) => {
     const time = formState.inputs.hora.value;
     const fecha = new Date(`${date} ${time}`);
 
-    onCreateTurno(
+    await onCreateTurno(
       fecha,
       formState.inputs.observaciones.value,
       formState.inputs.medico.value,

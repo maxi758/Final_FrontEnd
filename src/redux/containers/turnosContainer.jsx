@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { createTurno, getTurnos } from '../reducers/turnosReducer';
-//const Turnos = React.lazy(() => import('../../turnos/pages/GetTurnos'));
-import Turnos from '../../turnos/pages/GetTurnos';
+import {
+  createTurno,
+  getTurnos,
+  updateTurno,
+  getTurnoById,
+} from '../reducers/turnosReducer';
 import { getMedicos } from '../reducers/medicosReducer';
+const Turnos = React.lazy(() => import('../../turnos/pages/GetTurnos'));
 const NewTurno = React.lazy(() => import('../../turnos/pages/NewTurno'));
-// const UpdateTurno = React.lazy(() => import('../../turnos/pages/UpdateTurno'));
+const UpdateTurno = React.lazy(() => import('../../turnos/pages/UpdateTurno'));
 // const MyTurnos = React.lazy(() =>
 //   import('../../turnos/pages/GetTurnosUsuario')
 // );
@@ -34,6 +38,10 @@ const TurnosContainer = () => {
     }
   }, [dispatch]);
 
+  const findOneTurnoHandler = (id, token) => {
+    dispatch(getTurnoById({ data: { id, token } }));
+  };
+
   const createTurnoHandler = (fecha, observaciones, medico, token) => {
     dispatch(
       createTurno({
@@ -41,7 +49,17 @@ const TurnosContainer = () => {
         token,
       })
     );
-    navigate('/turnos');
+    //navigate('/turnos');
+  };
+
+  const updateTurnoHandler = (id, fecha, observaciones, medico, token) => {
+    dispatch(
+      updateTurno({
+        formData: { id, fecha, observaciones, medico },
+        token,
+      })
+    );
+    //navigate('/turnos');
   };
 
   return (
@@ -50,8 +68,16 @@ const TurnosContainer = () => {
         path="new"
         element={<NewTurno onCreateTurno={createTurnoHandler} />}
       />
-      {/* <Route path=":id" element={<UpdateTurno />} />
-      <Route path="me" element={<MyTurnos />} />
+      <Route
+        path=":id"
+        element={
+          <UpdateTurno
+            onUpdateTurno={updateTurnoHandler}
+            onFindOneTurno={findOneTurnoHandler}
+          />
+        }
+      />
+      {/* <Route path="me" element={<MyTurnos />} />
       <Route path="me/cancelados" element={<MyTurnos />} />
       <Route path="medicos/:id" element={<TurnosMedico />} /> */}
       <Route
