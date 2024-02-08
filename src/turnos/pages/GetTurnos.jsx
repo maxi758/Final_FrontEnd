@@ -1,12 +1,11 @@
-import React, {  } from 'react';
+import React from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
-const Turnos = ({turnos, isLoading, error}) => {
-
+const Turnos = ({ turnos, isLoading, error }) => {
   const { clearError } = useHttpClient();
 
   const turnoDeletedHandler = (deletedTurnoId) => {
@@ -25,16 +24,8 @@ const Turnos = ({turnos, isLoading, error}) => {
       />
     );
   }
-  
+
   return (
-    // <React.Fragment>
-    //     {isLoading && (
-    //         <div className="center">
-    //             <CircularProgress />
-    //         </div>
-    //     )}
-    //     {!isLoading && loadedTurnos && <MedicoList items={loadedTurnos} />}
-    // </React.Fragment>
     <React.Fragment>
       {isLoading && (
         <div className="center">

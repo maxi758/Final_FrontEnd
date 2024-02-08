@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 import { Card, CircularProgress } from '@mui/material';
 import MedicoList from '../components/MedicoList';
@@ -6,9 +6,17 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
 const Medicos = ({ isLoading, medicos, error }) => {
   const { clearError } = useHttpClient();
+  const [loadedMedicos, setLoadedMedicos] = useState([]);
+
+  useEffect(() => {
+    if (medicos) {
+      setLoadedMedicos(medicos);
+    }
+  }, [medicos]);
+
   const medicoDeletedHandler = (deletedMedicoId) => {
     setLoadedMedicos((prevMedicos) =>
-      prevMedicos.filter((medico) => medico.id !== deletedMedicoId)
+      prevMedicos.filter((medico) => medico._id !== deletedMedicoId)
     );
   };
 
@@ -29,7 +37,7 @@ const Medicos = ({ isLoading, medicos, error }) => {
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
       {!isLoading && medicos && (
-        <MedicoList items={medicos} onDeleteMedico={medicoDeletedHandler} />
+        <MedicoList items={loadedMedicos} onDeleteMedico={medicoDeletedHandler} />
       )}
     </React.Fragment>
   );
