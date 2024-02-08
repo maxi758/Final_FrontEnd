@@ -113,6 +113,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(getMedicos.rejected, (state, action) => {
+        state.isLoading = false;
         console.log(action.payload);
       })
       .addCase(createMedico.pending, (state, action) => {
@@ -124,6 +125,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(createMedico.rejected, (state, action) => {
+        state.isLoading = false;
         console.log(action.payload);
       })
       .addCase(getMedicoById.pending, (state, action) => {
@@ -135,6 +137,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(getMedicoById.rejected, (state, action) => {
+        state.isLoading = false;
         console.log(action.payload);
       })
       .addCase(updateMedico.pending, (state, action) => {
@@ -149,6 +152,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(updateMedico.rejected, (state, action) => {
+        state.isLoading = false;
         console.log(action.payload);
       });
   },
