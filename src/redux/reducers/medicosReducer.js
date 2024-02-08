@@ -6,6 +6,8 @@ const initialState = {
   apellido: '',
   especialidad: '',
   matricula: '',
+  isLoading: false,
+  medicos: [],
 };
 
 export const getMedicos = createAsyncThunk(
@@ -79,7 +81,9 @@ export const createMedico = createAsyncThunk(
 export const updateMedico = createAsyncThunk(
   'medicos/updateMedico',
   async ({ formData, token }, thunkAPI) => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${formData.id}`;
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${
+      formData.id
+    }`;
     console.log(url);
     console.log('form', formData);
     console.log(token);
