@@ -22,11 +22,14 @@ const Medicos = React.lazy(() => import('./redux/containers/medicosContainer'));
 //const Auth = React.lazy(() => import('./usuarios/pages/Auth'));
 const Auth = React.lazy(() => import('./redux/containers/authContainer'));
 const Recover = React.lazy(() => import('./usuarios/pages/updateUser'));
-const Turnos = React.lazy(() => import('./turnos/pages/GetTurnos'));
+//const Turnos = React.lazy(() => import('./turnos/pages/GetTurnos'));
+const Turnos = React.lazy(() => import('./redux/containers/turnosContainer'));
 const NewTurno = React.lazy(() => import('./turnos/pages/NewTurno'));
 const UpdateTurno = React.lazy(() => import('./turnos/pages/UpdateTurno'));
 const MyTurnos = React.lazy(() => import('./turnos/pages/GetTurnosUsuario'));
 const TurnosMedico = React.lazy(() => import('./turnos/pages/GetTurnosMedico'));
+
+import './App.css';
 
 const App = () => {
   const { isLoggedIn, userId, token, rol } = useSelector((state) => state.auth);

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTurnos } from "../reducers/turnosReducer";
-const Turnos = React.lazy(() => import("../turnos/pages/GetTurnos"));
-const NewTurno = React.lazy(() => import("../turnos/pages/NewTurno"));
+const Turnos = React.lazy(() => import("../../turnos/pages/GetTurnos"));
+/*const NewTurno = React.lazy(() => import("../turnos/pages/NewTurno"));
 const UpdateTurno = React.lazy(() => import("../turnos/pages/UpdateTurno"));
 const MyTurnos = React.lazy(() => import("../turnos/pages/GetTurnosUsuario"));
-const TurnosMedico = React.lazy(() => import("../turnos/pages/GetTurnosMedico"));
+const TurnosMedico = React.lazy(() => import("../turnos/pages/GetTurnosMedico"));*/
 
 const TurnosContainer = () => {
     const dispatch = useDispatch();

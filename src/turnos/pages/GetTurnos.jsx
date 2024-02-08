@@ -1,37 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {  } from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { AuthContext } from '../../context/auth-context';
 
-const Turnos = () => {
-  const auth = useContext(AuthContext);
-  const [loadedTurnos, setLoadedTurnos] = useState();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+const Turnos = ({turnos, isLoading, error}) => {
 
-  useEffect(() => {
-    const fetchTurnos = async () => {
-      try {
-        console.log('fetching Turnos');
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos`,
-          'GET',
-          null,
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
-          }
-        );
-        console.log('Response from fetch', responseData.turnos);
-        setLoadedTurnos(responseData.turnos);
-      } catch (err) {
-        console.log('Error: ', err);
-      }
-    };
-    fetchTurnos();
-  }, [sendRequest]);
+  const { clearError } = useHttpClient();
 
   const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
@@ -65,7 +41,7 @@ const Turnos = () => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {!loadedTurnos && !isLoading && (
+      {!turnos && !isLoading && (
         <div className="center">
           <Card>
             <h2>No hay turnos</h2>
@@ -73,8 +49,8 @@ const Turnos = () => {
         </div>
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
-      {!isLoading && loadedTurnos && (
-        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} />
+      {!isLoading && turnos && (
+        <TurnoList items={turnos} onDeleteMedico={turnoDeletedHandler} />
       )}
     </React.Fragment>
   );
