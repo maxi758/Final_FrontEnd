@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
@@ -7,6 +7,13 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
 const Turnos = ({ turnos, isLoading, error }) => {
   const { clearError } = useHttpClient();
+  const [loadedTurnos, setLoadedTurnos] = useState([]);
+
+  useEffect(() => {
+    if (turnos) {
+      setLoadedTurnos(turnos);
+    }
+  }, [turnos]);
 
   const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
@@ -41,7 +48,7 @@ const Turnos = ({ turnos, isLoading, error }) => {
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
       {!isLoading && turnos && (
-        <TurnoList items={turnos} onDeleteMedico={turnoDeletedHandler} />
+        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} />
       )}
     </React.Fragment>
   );

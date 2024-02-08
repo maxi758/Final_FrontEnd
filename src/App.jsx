@@ -24,7 +24,7 @@ const Auth = React.lazy(() => import('./redux/containers/authContainer'));
 const Recover = React.lazy(() => import('./usuarios/pages/updateUser'));
 //const Turnos = React.lazy(() => import('./turnos/pages/GetTurnos'));
 const Turnos = React.lazy(() => import('./redux/containers/turnosContainer'));
-const NewTurno = React.lazy(() => import('./turnos/pages/NewTurno'));
+//const NewTurno = React.lazy(() => import('./turnos/pages/NewTurno'));
 const UpdateTurno = React.lazy(() => import('./turnos/pages/UpdateTurno'));
 const MyTurnos = React.lazy(() => import('./turnos/pages/GetTurnosUsuario'));
 const TurnosMedico = React.lazy(() => import('./turnos/pages/GetTurnosMedico'));
@@ -51,18 +51,18 @@ const App = () => {
     routes = (
       <Routes>
         <Route path="/recover" element={<Recover />} />
-        <Route path="/turnos" element={<Turnos />} />
-        <Route path="/turnos/new" element={<NewTurno />} />
-        <Route path="/turnos/:id" element={<UpdateTurno />} />
+        <Route path="/turnos/*" element={<Turnos />} />
+        {/* <Route path="/turnos/new" element={<NewTurno />} /> */}
+        {/* <Route path="/turnos/:id" element={<UpdateTurno />} />
         <Route path="/turnos/me" element={<MyTurnos />} />
         <Route path="/turnos/me/cancelados" element={<MyTurnos />} />
-        <Route path="/turnos/medicos/:id" element={<TurnosMedico />} />
+        <Route path="/turnos/medicos/:id" element={<TurnosMedico />} /> */}
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/medicos/*" element={<Medicos />} />
         {/* <Route path="/medicos/new" element={<NewMedico />} />
         <Route path="/medicos/:id" element={<EditMedico />} /> */}
         <Route path="/auth" element={<Auth />} />
-        <Route path="/" element={<Navigate to="/especialidades" />} />
+        <Route path="/" element={<Navigate to="/medicos" />} />
         <Route path="*" element={<Navigate to="/especialidades" />} />
       </Routes>
     );

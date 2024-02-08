@@ -5,7 +5,10 @@ const initialState = {
   fecha: null,
   estado: null,
   observaciones: null,
-  medico: null,
+  medico: '',
+  paciente: '',
+  loading: false,
+  turnos: [],
 };
 
 export const getTurnos = createAsyncThunk(
@@ -29,6 +32,27 @@ export const getTurnos = createAsyncThunk(
   }
 );
 
+export const createTurno = createAsyncThunk(
+  'turnos/createTurno',
+  async ({ formData, token }, thunkAPI) => {
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos`;
+    console.log(url);
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log(response);
+      return response.data.turno;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const medicosSlice = createSlice({
   name: 'turnos',
   initialState,
@@ -39,8 +63,21 @@ const medicosSlice = createSlice({
     builder.addCase(getTurnos.fulfilled, (state, action) => {
       state.turnos = action.payload;
       state.loading = false;
+      return state;
     });
     builder.addCase(getTurnos.rejected, (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(createTurno.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(createTurno.fulfilled, (state, action) => {
+      state.turnos.push(action.payload);
+      state.loading = false;
+      return state;
+    });
+    builder.addCase(createTurno.rejected, (state, action) => {
       state.error = action.payload;
       state.loading = false;
     });

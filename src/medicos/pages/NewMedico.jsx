@@ -38,37 +38,6 @@ const NewMedico = ({ onCreateMedico }) => {
     false
   );
 
-  const navigate = useNavigate(); // useNavigate es un hook que nos da react-router-dom para redireccionar, tiene la misma funcionalidad que useHistory
-
-  /*useEffect(() => {
-    const fetchEspecialidades = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`,
-          'GET',
-          null,
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token,
-          }
-        );
-        setEspecialidades(responseData.especialidades);
-
-        setFormData(
-          {
-            ...formState.inputs,
-            especialidad: {
-              value: responseData.especialidad[0].id,
-              isValid: true,
-            },
-          },
-          true
-        );
-      } catch (err) {}
-    };
-
-    fetchEspecialidades();
-  }, [sendRequest, token]);*/
   useEffect(() => {
     if (especialidades && especialidades.length > 0) {
       setFormData(

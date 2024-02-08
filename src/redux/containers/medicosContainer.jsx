@@ -7,6 +7,7 @@ import {
   updateMedico,
   getMedicoById,
 } from '../reducers/medicosReducer';
+import { fetchEspecialidades } from '../actions/especialidadesActions';
 import Medicos from '../../medicos/pages/GetMedicos';
 import NewMedico from '../../medicos/pages/NewMedico';
 import UpdateMedico from '../../medicos/pages/UpdateMedico';
@@ -15,11 +16,17 @@ const MedicosContainer = () => {
   const dispatch = useDispatch();
   const { medicos, isLoading } = useSelector((state) => state.medicos);
   const { token } = useSelector((state) => state.auth);
+  const { especialidades } = useSelector((state) => state.especialidades);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     try {
+      if (!especialidades) {
+        const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`;
+        dispatch(fetchEspecialidades(url,token));
+      }
+
       dispatch(getMedicos(token));
     } catch (err) {
       setError(err);

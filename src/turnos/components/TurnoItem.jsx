@@ -8,9 +8,11 @@ import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 import Button from '../../shared/components/FormElements/Button';
+import { useSelector } from 'react-redux';
 
 const TurnoItem = (props) => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading } = useSelector((state) => state.turnos);
+  const { error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [item, setItem] = useState({

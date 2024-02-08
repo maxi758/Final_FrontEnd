@@ -8,13 +8,14 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
-import { AuthContext } from '../../context/auth-context';
 import '../../medicos/pages/PlaceForm.css';
+import { useSelector } from 'react-redux';
 
-const NewTurno = () => {
-  const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [medicos, setMedicos] = useState([]);
+const NewTurno = ({ onCreateTurno }) => {
+  const { token } = useSelector((state) => state.auth);
+  const { medicos } = useSelector((state) => state.medicos);
+  const { turnos, isLoading } = useSelector((state) => state.turnos);
+  const { error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
       fecha: {
@@ -40,64 +41,33 @@ const NewTurno = () => {
   const navigate = useNavigate(); // useNavigate es un hook que nos da react-router-dom para redireccionar, tiene la misma funcionalidad que useHistory
 
   useEffect(() => {
-    const fetchMedicos = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`,
-          'GET',
-          null,
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
-          }
-        );
-        setMedicos(responseData.medicos);
-
-        setFormData(
-          {
-            ...formState.inputs,
-            medico: {
-              value: responseData.medicos[0].id,
-              isValid: true,
-            },
+    if (medicos && medicos.length > 0) {
+      setFormData(
+        {
+          ...formState.inputs,
+          medico: {
+            value: medicos[0].id,
+            isValid: true,
           },
-          true
-        );
-      } catch (err) {}
-    };
-
-    fetchMedicos();
-  }, [sendRequest, auth.token]);
+        },
+        true
+      );
+    }
+  }, [token, medicos]);
 
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('fecha', formState.inputs.fecha.value);
-      formData.append('hora', formState.inputs.hora.value);
-      formData.append('observaciones', formState.inputs.observaciones.value);
-      formData.append('medico', formState.inputs.medico.value);
 
-      const date = formState.inputs.fecha.value;
-      const time = formState.inputs.hora.value;
-      const fecha = new Date(`${date} ${time}`);
+    const date = formState.inputs.fecha.value;
+    const time = formState.inputs.hora.value;
+    const fecha = new Date(`${date} ${time}`);
 
-      console.log(formState);
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos`,
-        'POST',
-        JSON.stringify({
-          fecha,
-          observaciones: formState.inputs.observaciones.value,
-          medico: formState.inputs.medico.value,
-        }),
-        {
-          'Content-Type': 'application/json', // le decimos que le estamos enviando un json
-          Authorization: 'Bearer ' + auth.token, // el token lo obtenemos del context
-        }
-      );
-      navigate('/turnos'); // redirecciona al home
-    } catch (err) {}
+    onCreateTurno(
+      fecha,
+      formState.inputs.observaciones.value,
+      formState.inputs.medico.value,
+      token
+    );
   };
 
   if (error) {
@@ -107,6 +77,13 @@ const NewTurno = () => {
         code={error.code}
         onClear={clearError}
       />
+    );
+  }
+  if (isLoading || !turnos ) {
+    return (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
     );
   }
 
