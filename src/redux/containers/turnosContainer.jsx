@@ -6,14 +6,15 @@ import {
   getTurnos,
   updateTurno,
   getTurnoById,
+  getTurnoByUsuario
 } from '../reducers/turnosReducer';
 import { getMedicos } from '../reducers/medicosReducer';
 const Turnos = React.lazy(() => import('../../turnos/pages/GetTurnos'));
 const NewTurno = React.lazy(() => import('../../turnos/pages/NewTurno'));
 const UpdateTurno = React.lazy(() => import('../../turnos/pages/UpdateTurno'));
-// const MyTurnos = React.lazy(() =>
-//   import('../../turnos/pages/GetTurnosUsuario')
-// );
+const MyTurnos = React.lazy(() =>
+  import('../../turnos/pages/GetTurnosUsuario')
+);
 // const TurnosMedico = React.lazy(() =>
 //   import('../../turnos/pages/GetTurnosMedico')
 // );
@@ -41,6 +42,10 @@ const TurnosContainer = () => {
   const findOneTurnoHandler = (id, token) => {
     dispatch(getTurnoById({ data: { id, token } }));
   };
+
+  const getTurnosByUsuarioHandler = (estado) => {
+    dispatch(getTurnoByUsuario(estado));
+    };
 
   const createTurnoHandler = (fecha, observaciones, medico, token) => {
     dispatch(
@@ -77,9 +82,9 @@ const TurnosContainer = () => {
           />
         }
       />
-      {/* <Route path="me" element={<MyTurnos />} />
+      <Route path="me" element={<MyTurnos onGetMyTurnos={getTurnosByUsuarioHandler} />} />
       <Route path="me/cancelados" element={<MyTurnos />} />
-      <Route path="medicos/:id" element={<TurnosMedico />} /> */}
+      {/* <Route path="medicos/:id" element={<TurnosMedico />} /> */}
       <Route
         path=""
         element={<Turnos turnos={turnos} isLoading={isLoading} error={error} />}

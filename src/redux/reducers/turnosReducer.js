@@ -2,13 +2,26 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
-  fecha: null,
-  estado: null,
-  observaciones: null,
-  medico: '',
-  paciente: '',
   loading: false,
   turnos: [],
+  loadedTurno: {
+    fecha: null,
+    estado: null,
+    observaciones: null,
+    medico: '',
+    paciente: '',
+  },
+  turnosUsuario: [],
+};
+
+const getToken = (thunkAPI) => {
+  const state = thunkAPI.getState();
+  return state.auth.token;
+};
+
+const getUserId = (thunkAPI) => {
+  const state = thunkAPI.getState();
+  return state.auth.userId;
 };
 
 export const getTurnos = createAsyncThunk(
@@ -99,6 +112,31 @@ export const updateTurno = createAsyncThunk(
   }
 );
 
+export const getTurnoByUsuario = createAsyncThunk(
+  'turnos/getTurnoByUsuario',
+  async (estado, thunkAPI) => {
+    const userId = getUserId(thunkAPI);
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/turnos/pacientes/${userId}?estado=${estado}`;
+    const token = getToken(thunkAPI);
+    console.log(url);
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log('response',response);
+      return response.data.turnos;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const medicosSlice = createSlice({
   name: 'turnos',
   initialState,
@@ -151,6 +189,18 @@ const medicosSlice = createSlice({
       return state;
     });
     builder.addCase(updateTurno.rejected, (state, action) => {
+      //state.error = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getTurnoByUsuario.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getTurnoByUsuario.fulfilled, (state, action) => {
+      state.turnosUsuario = action.payload;
+      state.loading = false;
+      return state;
+    });
+    builder.addCase(getTurnoByUsuario.rejected, (state, action) => {
       //state.error = action.payload;
       state.loading = false;
     });
