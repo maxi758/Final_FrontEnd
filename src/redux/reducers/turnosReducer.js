@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const initialState = {
   loading: false,
-  turnos: [],
+  turnosDisponibles: [],
   loadedTurno: {
     fecha: null,
     estado: null,
@@ -11,7 +11,8 @@ const initialState = {
     medico: '',
     paciente: '',
   },
-  turnosUsuario: [],
+  turnosActivosUsuario: [],
+  turnosCanceladosUsuario: [],
 };
 
 const getToken = (thunkAPI) => {
@@ -116,9 +117,16 @@ export const getTurnoByUsuario = createAsyncThunk(
   'turnos/getTurnoByUsuario',
   async (estado, thunkAPI) => {
     const userId = getUserId(thunkAPI);
-    const url = `${
-      import.meta.env.VITE_REACT_APP_BACKEND_URL
-    }/turnos/pacientes/${userId}?estado=${estado}`;
+    let url;
+    if (estado === 'CANCELADO') {
+      url = `${
+        import.meta.env.VITE_REACT_APP_BACKEND_URL
+      }/turnos/pacientes/${userId}/cancelados`;
+    } else {
+      url = `${
+        import.meta.env.VITE_REACT_APP_BACKEND_URL
+      }/turnos/pacientes/${userId}?estado=${estado}`;
+    }
     const token = getToken(thunkAPI);
     console.log(url);
     try {
@@ -128,8 +136,62 @@ export const getTurnoByUsuario = createAsyncThunk(
           Authorization: 'Bearer ' + token,
         },
       });
-      console.log('response',response);
+      console.log('response', response);
       return response.data.turnos;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const asignTurno = createAsyncThunk(
+  'turnos/asignTurno',
+  async (id, thunkAPI) => {
+    const token = getToken(thunkAPI);
+    console.log('token', token);
+    console.log('id', id);
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/turnos/${id}/reservar`;
+    console.log(url);
+    try {
+      const response = await axios.patch(
+        url,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+      console.log(response);
+      return response.data.turno;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const cancelTurno = createAsyncThunk(
+  'turnos/cancelTurno',
+  async (id, thunkAPI) => {
+    const token = getToken(thunkAPI);
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/turnos/${id}/cancelar`;
+    console.log(url);
+    try {
+      const response = await axios.patch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log(response);
+      return response.data.turno;
     } catch (error) {
       console.log(error);
       return thunkAPI.rejectWithValue(error.response.data);
@@ -145,7 +207,7 @@ const medicosSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getTurnos.fulfilled, (state, action) => {
-      state.turnos = action.payload;
+      state.turnosDisponibles = action.payload;
       state.loading = false;
       return state;
     });
@@ -169,7 +231,7 @@ const medicosSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createTurno.fulfilled, (state, action) => {
-      state.turnos.push(action.payload);
+      state.turnosDisponibles.push(action.payload);
       state.loading = false;
       return state;
     });
@@ -196,11 +258,47 @@ const medicosSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getTurnoByUsuario.fulfilled, (state, action) => {
-      state.turnosUsuario = action.payload;
+      if (action.meta.arg === 'CANCELADO') {
+        state.turnosCanceladosUsuario = action.payload;
+      } else {
+        state.turnosActivosUsuario = action.payload;
+      }
       state.loading = false;
       return state;
     });
     builder.addCase(getTurnoByUsuario.rejected, (state, action) => {
+      //state.error = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(asignTurno.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(asignTurno.fulfilled, (state, action) => {
+      state.loadedTurno = action.payload;
+      state.turnosDisponibles = state.turnosDisponibles.filter(
+        (turno) => turno._id !== action.payload._id
+      );
+      state.turnosActivosUsuario.push(action.payload);
+      state.loading = false;
+      return state;
+    });
+    builder.addCase(asignTurno.rejected, (state, action) => {
+      //state.error = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(cancelTurno.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(cancelTurno.fulfilled, (state, action) => {
+      state.loadedTurno = action.payload;
+      state.turnosActivosUsuario = state.turnosActivosUsuario.filter(
+        (turno) => turno._id !== action.payload._id
+      );
+      state.turnosCanceladosUsuario.push(action.payload);
+      state.loading = false;
+      return state;
+    });
+    builder.addCase(cancelTurno.rejected, (state, action) => {
       //state.error = action.payload;
       state.loading = false;
     });

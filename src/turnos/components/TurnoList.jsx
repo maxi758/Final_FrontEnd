@@ -38,6 +38,7 @@ const TurnoList = (props) => {
             medico={turno.medico}
             fecha={new Date(turno.fecha).toLocaleString()}
             observaciones={turno.observaciones}
+            onAsignTurno={props.onAsignTurno}
             onDelete={props.onDeleteMedico}
             isMyTurnos={props.isMyTurnos ? true : false}
             selectedEstado={props.selectedEstado}

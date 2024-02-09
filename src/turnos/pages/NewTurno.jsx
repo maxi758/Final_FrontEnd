@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 const NewTurno = ({ onCreateTurno }) => {
   const { token } = useSelector((state) => state.auth);
   const { medicos } = useSelector((state) => state.medicos);
-  const { turnos, isLoading } = useSelector((state) => state.turnos);
+  const { turnosDisponibles, isLoading } = useSelector((state) => state.turnos);
   const { error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -79,7 +79,7 @@ const NewTurno = ({ onCreateTurno }) => {
       />
     );
   }
-  if (isLoading || !turnos ) {
+  if (isLoading || !turnosDisponibles) {
     return (
       <div className="center">
         <LoadingSpinner />

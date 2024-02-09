@@ -42,16 +42,7 @@ const TurnoItem = (props) => {
 
   const asignarTurnoHandler = async () => {
     try {
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${
-          props.id
-        }/reservar`,
-        'PATCH',
-        null,
-        {
-          Authorization: 'Bearer ' + token,
-        }
-      );
+      props.onAsignTurno(props.id);
       props.onDelete(props.id);
     } catch (err) {}
   };

@@ -14,16 +14,20 @@ const Turnos = ({ onGetMyTurnos }) => {
   const estado =
     match?.pathname?.endsWith('cancelados') ?? false ? 'CANCELADO' : 'ASIGNADO';
   console.log('estado', estado);
-  const { turnosUsuario, isLoading } = useSelector((state) => state.turnos);
+  const { turnosActivosUsuario, turnosCanceladosUsuario, isLoading } =
+    useSelector((state) => state.turnos);
   const [loadedTurnos, setLoadedTurnos] = useState();
-  const {error, clearError } = useHttpClient();
+  const { error, clearError } = useHttpClient();
 
   useEffect(() => {
-    const fetchTurnos = async () => {
-      onGetMyTurnos(estado);
-    };
-    fetchTurnos();
+    onGetMyTurnos(estado);
   }, [estado]);
+  let turnosUsuario;
+  if (estado === 'ASIGNADO') {
+    turnosUsuario = turnosActivosUsuario;
+  } else {
+    turnosUsuario = turnosCanceladosUsuario;
+  }
 
   const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
@@ -49,7 +53,7 @@ const Turnos = ({ onGetMyTurnos }) => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {turnosUsuario.length === 0 && !isLoading && (
+      {!turnosActivosUsuario && !isLoading && (
         <div className="center">
           <Card>
             <h2>No hay turnos</h2>

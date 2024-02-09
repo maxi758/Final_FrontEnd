@@ -6,7 +6,9 @@ import {
   getTurnos,
   updateTurno,
   getTurnoById,
-  getTurnoByUsuario
+  getTurnoByUsuario,
+  asignTurno,
+  cancelTurno,
 } from '../reducers/turnosReducer';
 import { getMedicos } from '../reducers/medicosReducer';
 const Turnos = React.lazy(() => import('../../turnos/pages/GetTurnos'));
@@ -22,7 +24,7 @@ const MyTurnos = React.lazy(() =>
 const TurnosContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { turnos, isLoading } = useSelector((state) => state.turnos);
+  const { turnosDisponibles, isLoading } = useSelector((state) => state.turnos);
   const { token } = useSelector((state) => state.auth);
   const { medicos } = useSelector((state) => state.medicos);
   const [error, setError] = useState(null);
@@ -45,7 +47,7 @@ const TurnosContainer = () => {
 
   const getTurnosByUsuarioHandler = (estado) => {
     dispatch(getTurnoByUsuario(estado));
-    };
+  };
 
   const createTurnoHandler = (fecha, observaciones, medico, token) => {
     dispatch(
@@ -53,8 +55,10 @@ const TurnosContainer = () => {
         formData: { fecha, observaciones, medico },
         token,
       })
-    );
-    //navigate('/turnos');
+    ).then(() => {
+      dispatch(getTurnos(token));
+    });
+    navigate('/turnos');
   };
 
   const updateTurnoHandler = (id, fecha, observaciones, medico, token) => {
@@ -63,8 +67,18 @@ const TurnosContainer = () => {
         formData: { id, fecha, observaciones, medico },
         token,
       })
-    );
-    //navigate('/turnos');
+    ).then(() => {
+      dispatch(getTurnos(token));
+    });
+    navigate('/turnos');
+  };
+
+  const asignTurnoHandler = (id) => {
+    dispatch(asignTurno(id));
+  };
+
+  const cancelTurnoHandler = (id) => {
+    dispatch(cancelTurno(id));
   };
 
   return (
@@ -82,12 +96,25 @@ const TurnosContainer = () => {
           />
         }
       />
-      <Route path="me" element={<MyTurnos onGetMyTurnos={getTurnosByUsuarioHandler} />} />
-      <Route path="me/cancelados" element={<MyTurnos />} />
+      <Route
+        path="me"
+        element={<MyTurnos onGetMyTurnos={getTurnosByUsuarioHandler} />}
+      />
+      <Route
+        path="me/cancelados"
+        element={<MyTurnos onGetMyTurnos={getTurnosByUsuarioHandler} />}
+      />
       {/* <Route path="medicos/:id" element={<TurnosMedico />} /> */}
       <Route
         path=""
-        element={<Turnos turnos={turnos} isLoading={isLoading} error={error} />}
+        element={
+          <Turnos
+            turnos={turnosDisponibles}
+            isLoading={isLoading}
+            error={error}
+            onAsignTurno={asignTurnoHandler}
+          />
+        }
       />
     </Routes>
   );
