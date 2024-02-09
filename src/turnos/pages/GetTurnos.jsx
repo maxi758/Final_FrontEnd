@@ -6,13 +6,18 @@ import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useSelector } from 'react-redux';
 
-const Turnos = ({ turnos, isLoading, error, onAsignTurno }) => {
+const Turnos = ({ turnos, isLoading, error, onAsignTurno, onCancelTurno }) => {
   const { clearError } = useHttpClient();
   const { turnosDisponibles } = useSelector((state) => state.turnos);
 
   const AsignTurnoHandler = (turnoId) => {
     onAsignTurno(turnoId);
-  }
+  };
+
+  const cancelTurnoHandler = (turnoId) => {
+    onCancelTurno(turnoId);
+  };
+
   const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
       prevTurnos.filter((turno) => turno.id !== deletedTurnoId)
@@ -46,7 +51,12 @@ const Turnos = ({ turnos, isLoading, error, onAsignTurno }) => {
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
       {!isLoading && turnos && (
-        <TurnoList items={turnosDisponibles} onDeleteMedico={turnoDeletedHandler} onAsignTurno={AsignTurnoHandler} />
+        <TurnoList
+          items={turnosDisponibles}
+          onDeleteMedico={turnoDeletedHandler}
+          onAsignTurno={AsignTurnoHandler}
+          onCancelTurno={cancelTurnoHandler}
+        />
       )}
     </React.Fragment>
   );

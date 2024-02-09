@@ -184,7 +184,7 @@ export const cancelTurno = createAsyncThunk(
     }/turnos/${id}/cancelar`;
     console.log(url);
     try {
-      const response = await axios.patch(url, {
+      const response = await axios.patch(url, {}, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,

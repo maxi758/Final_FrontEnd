@@ -98,7 +98,12 @@ const TurnosContainer = () => {
       />
       <Route
         path="me"
-        element={<MyTurnos onGetMyTurnos={getTurnosByUsuarioHandler} />}
+        element={
+          <MyTurnos
+            onGetMyTurnos={getTurnosByUsuarioHandler}
+            onCancelTurno={cancelTurnoHandler}
+          />
+        }
       />
       <Route
         path="me/cancelados"
@@ -113,6 +118,7 @@ const TurnosContainer = () => {
             isLoading={isLoading}
             error={error}
             onAsignTurno={asignTurnoHandler}
+            onCancelTurno={cancelTurnoHandler}
           />
         }
       />

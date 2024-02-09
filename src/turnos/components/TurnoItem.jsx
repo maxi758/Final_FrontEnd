@@ -49,17 +49,9 @@ const TurnoItem = (props) => {
 
   const cancelTurnoHandler = async () => {
     try {
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${
-          props.id
-        }/cancelar`,
-        'PATCH',
-        null,
-        {
-          Authorization: 'Bearer ' + token,
-        }
-      );
-      props.onDelete(props.id);
+      console.log('id', props.id);
+      props.onCancelTurno(props.id);
+      //props.onDelete(props.id);
     } catch (err) {}
   };
 

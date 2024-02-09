@@ -8,7 +8,7 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { AuthContext } from '../../context/auth-context';
 import { useSelector } from 'react-redux';
 
-const Turnos = ({ onGetMyTurnos }) => {
+const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
   const match = useMatch('/turnos/me/cancelados');
   console.log('match', match);
   const estado =
@@ -29,11 +29,15 @@ const Turnos = ({ onGetMyTurnos }) => {
     turnosUsuario = turnosCanceladosUsuario;
   }
 
-  const turnoDeletedHandler = (deletedTurnoId) => {
+  const cancelTurnoHandler = (turnoId) => {
+    onCancelTurno(turnoId);
+  };
+
+  /*const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
       prevTurnos.filter((turno) => turno.id !== deletedTurnoId)
     );
-  };
+  };*/
 
   if (error) {
     console.log(error);
@@ -64,7 +68,8 @@ const Turnos = ({ onGetMyTurnos }) => {
       {!isLoading && turnosUsuario && (
         <TurnoList
           items={turnosUsuario}
-          onDeleteMedico={turnoDeletedHandler}
+          //onDeleteMedico={turnoDeletedHandler}
+          onCancelTurno={cancelTurnoHandler}
           isMyTurnos={true}
           selectedEstado={estado}
         />
