@@ -151,7 +151,7 @@ export const getTurnoByMedico = createAsyncThunk(
   async (id, thunkAPI) => {
     const url = `${
       import.meta.env.VITE_REACT_APP_BACKEND_URL
-    }/turnos/medicos/${id}`;
+    }/turnos/medicos/${id}?estado=DISPONIBLE`;
     const token = getToken(thunkAPI);
     console.log(url);
     try {
@@ -317,6 +317,9 @@ const turnosSlice = createSlice({
     builder.addCase(asignTurno.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
       state.turnosDisponibles = state.turnosDisponibles.filter(
+        (turno) => turno._id !== action.payload._id
+      );
+      state.turnosMedico = state.turnosMedico.filter(
         (turno) => turno._id !== action.payload._id
       );
       state.turnosActivosUsuario.push(action.payload);

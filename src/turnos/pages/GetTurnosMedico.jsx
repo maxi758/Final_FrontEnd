@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHttpClient } from '../../hooks/http-hook';
 
@@ -7,20 +7,24 @@ import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useSelector } from 'react-redux';
 
-const Turnos = ({ onGetMedicoTurnos }) => {
+const Turnos = ({ onGetMedicoTurnos, onAsignTurno }) => {
   const { turnosMedico, isLoading } = useSelector((state) => state.turnos);
   const medicoId = useParams().id;
+  const { loadedTurnos, setLoadedTurnos } = useState([]);
   const { error, clearError } = useHttpClient();
 
   useEffect(() => {
     onGetMedicoTurnos(medicoId);
   }, [medicoId]);
 
-  /*const turnoDeletedHandler = (deletedTurnoId) => {
+  const AsignTurnoHandler = (turnoId) => {
+    onAsignTurno(turnoId);
+  };
+  const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
       prevTurnos.filter((turno) => turno.id !== deletedTurnoId)
     );
-  };*/
+  };
 
   if (error) {
     console.log(error);
@@ -52,6 +56,7 @@ const Turnos = ({ onGetMedicoTurnos }) => {
         <TurnoList
           items={turnosMedico}
           //onDeleteMedico={turnoDeletedHandler}
+          onAsignTurno={AsignTurnoHandler}
           isMyTurnos={false}
         />
       )}

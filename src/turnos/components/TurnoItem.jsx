@@ -19,6 +19,7 @@ const TurnoItem = (props) => {
     nombre: props.nombre,
     quantity: props.quantity,
   });
+  console.log('props', props);
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
@@ -92,6 +93,7 @@ const TurnoItem = (props) => {
             </h2>
             <p>{props.fecha}</p>
             <p>{props.observaciones}</p>
+            <p>{props.isMyTurnos}</p>
           </div>
           <div className="product-item__actions">
             {rol === 'ADMIN' && (
@@ -102,7 +104,7 @@ const TurnoItem = (props) => {
                 ELIMINAR
               </Button>
             )}
-            {rol === 'PACIENTE' && !props.isMyTurnos && (
+            {rol === 'PACIENTE' && props.isMyTurnos===false && (
               <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
             )}
             {rol === 'PACIENTE' &&

@@ -41,7 +41,7 @@ const TurnoList = (props) => {
             onAsignTurno={props.onAsignTurno}
             onCancelTurno={props.onCancelTurno}
             onDelete={props.onDeleteMedico}
-            isMyTurnos={props.isMyTurnos ? true : false}
+            isMyTurnos={props.isMyTurnos===true ? true : false}
             selectedEstado={props.selectedEstado}
           />
         ))}

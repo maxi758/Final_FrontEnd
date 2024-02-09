@@ -116,7 +116,12 @@ const TurnosContainer = () => {
       />
       <Route
         path="medicos/:id"
-        element={<TurnosMedico onGetMedicoTurnos={getTurnosByMedicoHandler} />}
+        element={
+          <TurnosMedico
+            onGetMedicoTurnos={getTurnosByMedicoHandler}
+            onAsignTurno={asignTurnoHandler}
+          />
+        }
       />
       <Route
         path=""
