@@ -13,6 +13,7 @@ const initialState = {
   },
   turnosActivosUsuario: [],
   turnosCanceladosUsuario: [],
+  turnosMedico: [],
 };
 
 const getToken = (thunkAPI) => {
@@ -145,6 +146,30 @@ export const getTurnoByUsuario = createAsyncThunk(
   }
 );
 
+export const getTurnoByMedico = createAsyncThunk(
+  'turnos/getTurnoByMedico',
+  async (id, thunkAPI) => {
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/turnos/medicos/${id}`;
+    const token = getToken(thunkAPI);
+    console.log(url);
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log('response', response);
+      return response.data.turnos;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const asignTurno = createAsyncThunk(
   'turnos/asignTurno',
   async (id, thunkAPI) => {
@@ -184,12 +209,16 @@ export const cancelTurno = createAsyncThunk(
     }/turnos/${id}/cancelar`;
     console.log(url);
     try {
-      const response = await axios.patch(url, {}, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-      });
+      const response = await axios.patch(
+        url,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
       console.log(response);
       return response.data.turno;
     } catch (error) {
@@ -199,7 +228,7 @@ export const cancelTurno = createAsyncThunk(
   }
 );
 
-const medicosSlice = createSlice({
+const turnosSlice = createSlice({
   name: 'turnos',
   initialState,
   extraReducers: (builder) => {
@@ -270,6 +299,18 @@ const medicosSlice = createSlice({
       //state.error = action.payload;
       state.isLoading = false;
     });
+    builder.addCase(getTurnoByMedico.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getTurnoByMedico.fulfilled, (state, action) => {
+      state.turnosMedico = action.payload;
+      state.isLoading = false;
+      return state;
+    });
+    builder.addCase(getTurnoByMedico.rejected, (state, action) => {
+      //state.error = action.payload;
+      state.isLoading = false;
+    });
     builder.addCase(asignTurno.pending, (state, action) => {
       state.isLoading = true;
     });
@@ -305,4 +346,4 @@ const medicosSlice = createSlice({
   },
 });
 
-export default medicosSlice.reducer;
+export default turnosSlice.reducer;
