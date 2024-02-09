@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
-  loading: false,
+  isLoading: false,
   turnosDisponibles: [],
   loadedTurno: {
     fecha: null,
@@ -204,58 +204,58 @@ const medicosSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder.addCase(getTurnos.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(getTurnos.fulfilled, (state, action) => {
       state.turnosDisponibles = action.payload;
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(getTurnos.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(getTurnoById.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(getTurnoById.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(getTurnoById.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(createTurno.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(createTurno.fulfilled, (state, action) => {
       state.turnosDisponibles.push(action.payload);
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(createTurno.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(updateTurno.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(updateTurno.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
       state.turnos = state.turnos.map((turno) =>
         turno._id === action.payload._id ? action.payload : turno
       );
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(updateTurno.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(getTurnoByUsuario.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(getTurnoByUsuario.fulfilled, (state, action) => {
       if (action.meta.arg === 'CANCELADO') {
@@ -263,15 +263,15 @@ const medicosSlice = createSlice({
       } else {
         state.turnosActivosUsuario = action.payload;
       }
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(getTurnoByUsuario.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(asignTurno.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(asignTurno.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
@@ -279,15 +279,15 @@ const medicosSlice = createSlice({
         (turno) => turno._id !== action.payload._id
       );
       state.turnosActivosUsuario.push(action.payload);
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(asignTurno.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
     builder.addCase(cancelTurno.pending, (state, action) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(cancelTurno.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
@@ -295,12 +295,12 @@ const medicosSlice = createSlice({
         (turno) => turno._id !== action.payload._id
       );
       state.turnosCanceladosUsuario.push(action.payload);
-      state.loading = false;
+      state.isLoading = false;
       return state;
     });
     builder.addCase(cancelTurno.rejected, (state, action) => {
       //state.error = action.payload;
-      state.loading = false;
+      state.isLoading = false;
     });
   },
 });
