@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams, useMatch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useMatch } from 'react-router-dom';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { AuthContext } from '../../context/auth-context';
 import { useSelector } from 'react-redux';
 
 const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
@@ -16,7 +15,6 @@ const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
   console.log('estado', estado);
   const { turnosActivosUsuario, turnosCanceladosUsuario, isLoading } =
     useSelector((state) => state.turnos);
-  const [loadedTurnos, setLoadedTurnos] = useState();
   const { error, clearError } = useHttpClient();
 
   useEffect(() => {

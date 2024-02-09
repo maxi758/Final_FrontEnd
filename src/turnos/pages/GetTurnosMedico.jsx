@@ -1,45 +1,26 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { AuthContext } from '../../context/auth-context';
+import { useSelector } from 'react-redux';
 
-const Turnos = () => {
-  const auth = useContext(AuthContext);
+const Turnos = ({ onGetMedicoTurnos }) => {
+  const { turnosMedico, isLoading } = useSelector((state) => state.turnos);
   const medicoId = useParams().id;
-  const [loadedTurnos, setLoadedTurnos] = useState();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { error, clearError } = useHttpClient();
 
   useEffect(() => {
-    const fetchTurnos = async () => {
-      try {
-        console.log('fetching Turnos');
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${medicoId}`,
-          'GET',
-          null,
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token,
-          }
-        );
-        console.log('Response from fetch', responseData.medico.turnos);
-        setLoadedTurnos(responseData.medico.turnos);
-      } catch (err) {
-        console.log('Error: ', err);
-      }
-    };
-    fetchTurnos();
-  }, [sendRequest, medicoId]);
+    onGetMedicoTurnos(medicoId);
+  }, [medicoId]);
 
-  const turnoDeletedHandler = (deletedTurnoId) => {
+  /*const turnoDeletedHandler = (deletedTurnoId) => {
     setLoadedTurnos((prevTurnos) =>
       prevTurnos.filter((turno) => turno.id !== deletedTurnoId)
     );
-  };
+  };*/
 
   if (error) {
     console.log(error);
@@ -51,7 +32,7 @@ const Turnos = () => {
       />
     );
   }
-  
+
   return (
     <React.Fragment>
       {isLoading && (
@@ -59,7 +40,7 @@ const Turnos = () => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {!loadedTurnos && !isLoading && (
+      {!turnosMedico && !isLoading && (
         <div className="center">
           <Card>
             <h2>No hay turnos</h2>
@@ -67,8 +48,12 @@ const Turnos = () => {
         </div>
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
-      {!isLoading && loadedTurnos && (
-        <TurnoList items={loadedTurnos} onDeleteMedico={turnoDeletedHandler} isMyTurnos={false} />
+      {!isLoading && turnosMedico && (
+        <TurnoList
+          items={turnosMedico}
+          //onDeleteMedico={turnoDeletedHandler}
+          isMyTurnos={false}
+        />
       )}
     </React.Fragment>
   );
