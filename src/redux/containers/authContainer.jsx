@@ -99,13 +99,7 @@ const AuthContainer = () => {
 
   const accountRecoveryHandler = (email) => {
     try {
-      dispatch(
-        sendAccountRecoveryEmail({
-          email,
-        })
-      ).then((action) => {
-        navigate('/');
-      });
+      dispatch(sendAccountRecoveryEmail(email));
     } catch (err) {
       console.log(err);
     }
@@ -115,7 +109,7 @@ const AuthContainer = () => {
   return (
     <Routes>
       <Route
-        path="/recover"
+        path="/recover-password"
         element={
           <UpdateUser
             onLogin={loginHandler}
@@ -123,7 +117,7 @@ const AuthContainer = () => {
           />
         }
       />
-      <Route path="/recover:key" element={<UpdateUser />} />
+      <Route path="/recover-password:key" element={<UpdateUser />} />
       <Route
         path="/"
         element={

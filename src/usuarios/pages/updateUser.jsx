@@ -19,12 +19,16 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
   const key = useParams().key || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { error, sendRequest, clearError } = useHttpClient();
+  console.log('isAuthenticated: ', isAuthenticated);
 	useEffect(() => {
+    console.log('token: ', token);
 		if (token) {
 			setIsAuthenticated(true);
+      console.log('isAuthenticated: ', isAuthenticated);
 		}
 		else {
 			setIsAuthenticated(false);
+      console.log('isAuthenticated: ', isAuthenticated);
 		}
 	}, [token]);
   const [formState, inputHandler, setFormData] = useForm(
@@ -60,20 +64,22 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
         formState.inputs.recoverEmail.isValid
       );
     }
-    setIsAuthenticated((prevMode) => !prevMode);
+    //setIsAuthenticated((prevMode) => !prevMode);
   };
 
   const authSubmitHandler = async (event) => {
     event.preventDefault();
     if (!isAuthenticated) {
       try {
+        console.log('formState.inputs.recoverEmail.value: ', formState.inputs.recoverEmail.value);
         onAccountRecovery(formState.inputs.recoverEmail.value);
-        setIsAuthenticated(true);
+        //setIsAuthenticated(true);
       } catch (err) {
         console.log(err);
       }
     } else {
       try {
+        console.log('aqui');
         const responseData = await sendRequest(
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_URL
@@ -89,7 +95,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
             'Content-Type': 'application/json',
           }
         );
-        setIsAuthenticated(true);
+        //setIsAuthenticated(true);
         //onLogin(responseData.userId, responseData.token);
       } catch (err) {}
     }

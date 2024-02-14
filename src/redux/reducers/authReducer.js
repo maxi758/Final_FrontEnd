@@ -82,7 +82,7 @@ export const sendAccountRecoveryEmail = createAsyncThunk(
     console.log(email);
     console.log(url);
     try {
-      const response = await axios.post(url, email, {
+      const response = await axios.post(url, {email}, {
         headers: {
           'Content-Type': 'application/json',
         },
