@@ -27,22 +27,18 @@ const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
   );
 
   useEffect(() => {
-    
-      try {
-        console.log('turnoId', turnoId);
-        console.log('token', token);
-        onFindOneTurno(turnoId, token);
-        console.log('loadedTurno', loadedTurno);
-        setFormData(
-          {
-            observaciones: {
-              value: loadedTurno.observaciones,
-              isValid: true,
-            },
+    try {
+      onFindOneTurno(turnoId, token);
+      setFormData(
+        {
+          observaciones: {
+            value: loadedTurno.observaciones,
+            isValid: true,
           },
-          true
-        );
-      } catch (err) {}
+        },
+        true
+      );
+    } catch (err) {}
   }, [turnoId]);
 
   const turnoUpdateSubmitHandler = async (event) => {

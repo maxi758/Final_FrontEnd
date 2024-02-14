@@ -2,6 +2,7 @@ import {
   createAsyncThunk,
   createSlice,
   createEntityAdapter,
+  createSelector,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -349,7 +350,7 @@ const turnosSlice = createSlice({
     });
     builder.addCase(asignTurno.fulfilled, (state, action) => {
       state.loadedTurno = action.payload;
-      turnosAdapter.deleteOne(state, action.payload._id);
+      turnosAdapter.removeOne(state, action.payload._id);
       state.turnosMedico = state.turnosMedico.filter(
         (turno) => turno._id !== action.payload._id
       );
@@ -397,5 +398,5 @@ export default turnosSlice.reducer;
 export const {
   selectAll: selectAllTurnos,
   selectById: selectTurnoById,
-  selectIds: selectTurnoIds,
+  selectIds: selectTurnoIds
 } = turnosAdapter.getSelectors((state) => state.turnos);

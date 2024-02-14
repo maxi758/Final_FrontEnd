@@ -55,7 +55,7 @@ const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {!turnosActivosUsuario && !isLoading && (
+      {!turnosUsuario && !isLoading && (
         <div className="center">
           <Card>
             <h2>No hay turnos</h2>
