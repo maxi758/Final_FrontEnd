@@ -1,8 +1,14 @@
 import React from 'react';
 import Auth from '../../usuarios/pages/Auth';
+import UpdateUser from '../../usuarios/pages/updateUser';
 import { useDispatch } from 'react-redux';
-import { login, register, createAdmin } from '../reducers/authReducer';
-import { useNavigate } from 'react-router-dom';
+import {
+  login,
+  register,
+  createAdmin,
+  sendAccountRecoveryEmail,
+} from '../reducers/authReducer';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 const AuthContainer = () => {
   const dispatch = useDispatch();
@@ -62,7 +68,7 @@ const AuthContainer = () => {
     }
   };
 
-	const createAdminHandler = (nombre, apellido, dni, email, password) => {
+  const createAdminHandler = (nombre, apellido, dni, email, password) => {
     try {
       dispatch(
         createAdmin({
@@ -91,7 +97,46 @@ const AuthContainer = () => {
     }
   };
 
-  return <Auth onLogin={loginHandler} onRegister={registerHandler} onCreateAdmin={createAdminHandler} />;
+  const accountRecoveryHandler = (email) => {
+    try {
+      dispatch(
+        sendAccountRecoveryEmail({
+          email,
+        })
+      ).then((action) => {
+        navigate('/');
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // return <Auth onLogin={loginHandler} onRegister={registerHandler} onCreateAdmin={createAdminHandler} />;
+  return (
+    <Routes>
+      <Route
+        path="/recover"
+        element={
+          <UpdateUser
+            onLogin={loginHandler}
+            onAccountRecovery={accountRecoveryHandler}
+          />
+        }
+      />
+      <Route path="/recover:key" element={<UpdateUser />} />
+      <Route
+        path="/"
+        element={
+          <Auth
+            onLogin={loginHandler}
+            onRegister={registerHandler}
+            onCreateAdmin={createAdminHandler}
+            onAccountRecovery={accountRecoveryHandler}
+          />
+        }
+      />
+    </Routes>
+  );
 };
 
 export default AuthContainer;

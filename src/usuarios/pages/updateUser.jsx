@@ -10,24 +10,23 @@ import {
 } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
-import { AuthContext } from '../../context/auth-context';
 
 import './Auth.css';
+import { useSelector } from 'react-redux';
 
-const UpdateUser = () => {
-  const auth = useContext(AuthContext);
+const UpdateUser = ({onLogin, onAccountRecovery}) => {
+  const {token, isLoggedIn, isLoading} = useSelector((state) => state.auth);
   const key = useParams().key || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { error, sendRequest, clearError } = useHttpClient();
 	useEffect(() => {
-		const token = auth.token;
 		if (token) {
 			setIsAuthenticated(true);
 		}
 		else {
 			setIsAuthenticated(false);
 		}
-	}, [auth.token]);
+	}, [token]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       recoverEmail: {
@@ -68,16 +67,7 @@ const UpdateUser = () => {
     event.preventDefault();
     if (!isAuthenticated) {
       try {
-        const responseData = await sendRequest(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/email`,
-          'POST',
-          JSON.stringify({
-            email: formState.inputs.recoverEmail.value,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
-        );
+        onAccountRecovery(formState.inputs.recoverEmail.value);
         setIsAuthenticated(true);
       } catch (err) {
         console.log(err);
@@ -100,7 +90,7 @@ const UpdateUser = () => {
           }
         );
         setIsAuthenticated(true);
-        auth.login(responseData.userId, responseData.token);
+        //onLogin(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
