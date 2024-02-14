@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -15,14 +15,18 @@ import './Auth.css';
 import { useSelector } from 'react-redux';
 
 const UpdateUser = ({onLogin, onAccountRecovery}) => {
+  const navigate = useNavigate();
   const {token, isLoggedIn, isLoading} = useSelector((state) => state.auth);
-  const key = useParams().key || null;
+  //const key = useParams().key || null;
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log('key: ', searchParams.get('key'));
+  const key = searchParams.get('key') || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { error, sendRequest, clearError } = useHttpClient();
   console.log('isAuthenticated: ', isAuthenticated);
 	useEffect(() => {
     console.log('token: ', token);
-		if (token) {
+		if (key) {
 			setIsAuthenticated(true);
       console.log('isAuthenticated: ', isAuthenticated);
 		}
@@ -30,7 +34,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
 			setIsAuthenticated(false);
       console.log('isAuthenticated: ', isAuthenticated);
 		}
-	}, [token]);
+	}, [key]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       recoverEmail: {
@@ -64,6 +68,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
         formState.inputs.recoverEmail.isValid
       );
     }
+    //navigate('/auth');
     //setIsAuthenticated((prevMode) => !prevMode);
   };
 
@@ -73,6 +78,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
       try {
         console.log('formState.inputs.recoverEmail.value: ', formState.inputs.recoverEmail.value);
         onAccountRecovery(formState.inputs.recoverEmail.value);
+        navigate('/auth');
         //setIsAuthenticated(true);
       } catch (err) {
         console.log(err);
@@ -165,6 +171,8 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
                   onInput={inputHandler}
                   initialValue={key}
                   initialValid={true}
+                  readOnly={true}
+                  disabled={true}
                 />
 								)}
               </div>
@@ -174,7 +182,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
               disabled={!formState.isValid}
               onClick={switchModeHandler}
             >
-              {isAuthenticated ? 'ACTUALIZAR' : 'RECUPERAR'}
+              {isLoggedIn ? 'ACTUALIZAR' : 'RECUPERAR'}
             </Button>
           </form>
         </Card>

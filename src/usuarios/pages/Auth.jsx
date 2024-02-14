@@ -15,9 +15,9 @@ import { useSelector } from 'react-redux';
 import './Auth.css';
 
 const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
-  const { token, rol } = useSelector((state) => state.auth);
+  const { token, rol, error } = useSelector((state) => state.auth);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient(); // falta adaptar a redux
+  const { isLoading, clearError } = useHttpClient(); // falta adaptar a redux
 
   const [formState, inputHandler, setFormData] = useForm(
     {

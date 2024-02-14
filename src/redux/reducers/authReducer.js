@@ -7,6 +7,7 @@ const initialState = {
   token: null,
   rol: null,
   isLoading: false,
+  error: null,
 };
 
 export const register = createAsyncThunk(
@@ -62,8 +63,8 @@ export const login = createAsyncThunk(
           'Content-Type': 'application/json',
         },
       });
-      console.log(response.data);
-      return response.data;
+      console.log(response);
+      return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -147,6 +148,7 @@ const authSlice = createSlice({
       })
       .addCase(createAdmin.rejected, (state, action) => {
         console.log(action.payload);
+        state.error = action.payload;
         state.isLoading = false;
       })
       .addCase(sendAccountRecoveryEmail.pending, (state, action) => {
