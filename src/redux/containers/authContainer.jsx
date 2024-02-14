@@ -7,6 +7,7 @@ import {
   register,
   createAdmin,
   sendAccountRecoveryEmail,
+  resetPassword,
 } from '../reducers/authReducer';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
@@ -20,21 +21,22 @@ const AuthContainer = () => {
           email,
           password,
         })
-      ).then((action) => {
-        const remainingTime = 60 * 60 * 1000; // 1 hora
-        const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
-        localStorage.setItem(
-          'userData',
-          JSON.stringify({
-            userId: action.payload.usuario._id,
-            token: action.payload.token,
-            rol: action.payload.usuario.rol,
-            expiration: expiryDate.toISOString(),
-          })
-        );
-        navigate('/');
-      })
-      .catch((err) => console.log(err));
+      )
+        .then((action) => {
+          const remainingTime = 60 * 60 * 1000; // 1 hora
+          const expiryDate = new Date(new Date().getTime() + remainingTime); // fecha actual + 1 hora
+          localStorage.setItem(
+            'userData',
+            JSON.stringify({
+              userId: action.payload.usuario._id,
+              token: action.payload.token,
+              rol: action.payload.usuario.rol,
+              expiration: expiryDate.toISOString(),
+            })
+          );
+          navigate('/');
+        })
+        .catch((err) => console.log(err));
     } catch (err) {
       console.log(err);
     }
@@ -106,6 +108,14 @@ const AuthContainer = () => {
     }
   };
 
+  const resetPasswordHandler = (key, email, password, repeatPassword) => {
+    try {
+      dispatch(resetPassword({ key, email, password, repeatPassword }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // return <Auth onLogin={loginHandler} onRegister={registerHandler} onCreateAdmin={createAdminHandler} />;
   return (
     <Routes>
@@ -115,6 +125,7 @@ const AuthContainer = () => {
           <UpdateUser
             onLogin={loginHandler}
             onAccountRecovery={accountRecoveryHandler}
+            onResetPassword={resetPasswordHandler}
           />
         }
       />

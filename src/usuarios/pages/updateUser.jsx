@@ -1,5 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Navigate,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
 import Input from '../components/Input';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -14,9 +19,9 @@ import { useHttpClient } from '../../hooks/http-hook';
 import './Auth.css';
 import { useSelector } from 'react-redux';
 
-const UpdateUser = ({onLogin, onAccountRecovery}) => {
+const UpdateUser = ({ onLogin, onAccountRecovery, onResetPassword }) => {
   const navigate = useNavigate();
-  const {token, isLoggedIn, isLoading} = useSelector((state) => state.auth);
+  const { token, isLoggedIn, isLoading } = useSelector((state) => state.auth);
   //const key = useParams().key || null;
   const [searchParams, setSearchParams] = useSearchParams();
   console.log('key: ', searchParams.get('key'));
@@ -24,17 +29,16 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { error, sendRequest, clearError } = useHttpClient();
   console.log('isAuthenticated: ', isAuthenticated);
-	useEffect(() => {
+  useEffect(() => {
     console.log('token: ', token);
-		if (key) {
-			setIsAuthenticated(true);
+    if (key) {
+      setIsAuthenticated(true);
       console.log('isAuthenticated: ', isAuthenticated);
-		}
-		else {
-			setIsAuthenticated(false);
+    } else {
+      setIsAuthenticated(false);
       console.log('isAuthenticated: ', isAuthenticated);
-		}
-	}, [key]);
+    }
+  }, [key]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       recoverEmail: {
@@ -76,7 +80,10 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
     event.preventDefault();
     if (!isAuthenticated) {
       try {
-        console.log('formState.inputs.recoverEmail.value: ', formState.inputs.recoverEmail.value);
+        console.log(
+          'formState.inputs.recoverEmail.value: ',
+          formState.inputs.recoverEmail.value
+        );
         onAccountRecovery(formState.inputs.recoverEmail.value);
         navigate('/auth');
         //setIsAuthenticated(true);
@@ -86,20 +93,11 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
     } else {
       try {
         console.log('aqui');
-        const responseData = await sendRequest(
-          `${
-            import.meta.env.VITE_REACT_APP_BACKEND_URL
-          }/usuarios/reset-password`,
-          'PATCH',
-          JSON.stringify({
-            key: key,
-            email: formState.inputs.recoverEmail.value,
-            password: formState.inputs.password.value,
-            repeatPassword: formState.inputs.repeatPassword.value,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
+        onResetPassword(
+          key,
+          formState.inputs.recoverEmail.value,
+          formState.inputs.password.value,
+          formState.inputs.repeatPassword.value
         );
         //setIsAuthenticated(true);
         //onLogin(responseData.userId, responseData.token);
@@ -119,17 +117,16 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
   }
 
   return (
-    (
-      <React.Fragment>
-        {/* <ErrorModal error={error} onClear={clearError} /> */}
-        <Card className="authentication">
-          {isLoading && <CircularProgress />}
-          <h2>
-            {isAuthenticated ? 'ACTUALIZAR CONTRASEÑA' : 'RECUPERAR CONTRASEÑA'}
-          </h2>
-          <hr />
-          <form onSubmit={authSubmitHandler}>
-						{!isLoggedIn && (
+    <React.Fragment>
+      {/* <ErrorModal error={error} onClear={clearError} /> */}
+      <Card className="authentication">
+        {isLoading && <CircularProgress />}
+        <h2>
+          {isAuthenticated ? 'ACTUALIZAR CONTRASEÑA' : 'RECUPERAR CONTRASEÑA'}
+        </h2>
+        <hr />
+        <form onSubmit={authSubmitHandler}>
+          {!isLoggedIn && (
             <Input
               id="recoverEmail"
               element="input"
@@ -139,28 +136,28 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
               errorText="Please enter a valid email address."
               onInput={inputHandler}
             />
-						)}
-            {isAuthenticated && (
-              <div>
-                <Input
-                  id="password"
-                  element="input"
-                  type="password"
-                  label="password"
-                  validators={[VALIDATOR_MINLENGTH(5)]}
-                  errorText="Please enter a valid password, at least 5 characters."
-                  onInput={inputHandler}
-                />
-                <Input
-                  id="repeatPassword"
-                  element="input"
-                  type="password"
-                  label="repeat password"
-                  validators={[VALIDATOR_MINLENGTH(5)]}
-                  errorText="Please enter a valid password, at least 5 characters."
-                  onInput={inputHandler}
-                />
-								{!isLoggedIn && (
+          )}
+          {isAuthenticated && (
+            <div>
+              <Input
+                id="password"
+                element="input"
+                type="password"
+                label="password"
+                validators={[VALIDATOR_MINLENGTH(5)]}
+                errorText="Please enter a valid password, at least 5 characters."
+                onInput={inputHandler}
+              />
+              <Input
+                id="repeatPassword"
+                element="input"
+                type="password"
+                label="repeat password"
+                validators={[VALIDATOR_MINLENGTH(5)]}
+                errorText="Please enter a valid password, at least 5 characters."
+                onInput={inputHandler}
+              />
+              {!isLoggedIn && (
                 <Input
                   id="key"
                   element="input"
@@ -174,20 +171,19 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
                   readOnly={true}
                   disabled={true}
                 />
-								)}
-              </div>
-            )}
-            <Button
-              type="submit"
-              disabled={!formState.isValid}
-              onClick={switchModeHandler}
-            >
-              {isLoggedIn ? 'ACTUALIZAR' : 'RECUPERAR'}
-            </Button>
-          </form>
-        </Card>
-      </React.Fragment>
-    )
+              )}
+            </div>
+          )}
+          <Button
+            type="submit"
+            disabled={!formState.isValid}
+            onClick={switchModeHandler}
+          >
+            {isLoggedIn ? 'ACTUALIZAR' : 'RECUPERAR'}
+          </Button>
+        </form>
+      </Card>
+    </React.Fragment>
   );
 };
 

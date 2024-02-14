@@ -96,6 +96,26 @@ export const sendAccountRecoveryEmail = createAsyncThunk(
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async (formData, thunkAPI) => {
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/reset-password`;
+    console.log(url);
+    try {
+      const response = await axios.patch(url, {formData}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + formData.token,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -159,6 +179,17 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(sendAccountRecoveryEmail.rejected, (state, action) => {
+        console.log(action.payload);
+        state.isLoading = false;
+      })
+      .addCase(resetPassword.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.isLoading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         console.log(action.payload);
         state.isLoading = false;
       });
