@@ -117,7 +117,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
           </h2>
           <hr />
           <form onSubmit={authSubmitHandler}>
-						{!auth.isLoggedIn && (
+						{!isLoggedIn && (
             <Input
               id="recoverEmail"
               element="input"
@@ -148,7 +148,7 @@ const UpdateUser = ({onLogin, onAccountRecovery}) => {
                   errorText="Please enter a valid password, at least 5 characters."
                   onInput={inputHandler}
                 />
-								{!auth.isLoggedIn && (
+								{!isLoggedIn && (
                 <Input
                   id="key"
                   element="input"

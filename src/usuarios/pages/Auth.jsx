@@ -175,7 +175,7 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
           CAMBIAR A {isLoginMode ? 'SIGNUP' : 'LOGIN'}
         </Button>
         <hr />
-        <Link to="/recover">
+        <Link to="/auth/recover">
           <Button>RECUPERAR CONTRASEÑA</Button>
         </Link>
       </Card>
