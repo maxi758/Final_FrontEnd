@@ -10,8 +10,11 @@ import {
   getTurnoByMedico,
   asignTurno,
   cancelTurno,
+  deleteTurno,
+  selectAllTurnos,
 } from '../reducers/turnosReducer';
 import { getMedicos } from '../reducers/medicosReducer';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 const Turnos = React.lazy(() => import('../../turnos/pages/GetTurnos'));
 const NewTurno = React.lazy(() => import('../../turnos/pages/NewTurno'));
 const UpdateTurno = React.lazy(() => import('../../turnos/pages/UpdateTurno'));
@@ -40,7 +43,7 @@ const TurnosContainer = () => {
       setError(err);
       console.log('error: ', err);
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   const findOneTurnoHandler = (id, token) => {
     dispatch(getTurnoById({ data: { id, token } }));
@@ -61,15 +64,14 @@ const TurnosContainer = () => {
         token,
       })
     ).then(() => {
-      dispatch(getTurnos(token));
+      navigate('/turnos');
     });
-    navigate('/turnos');
   };
 
-  const updateTurnoHandler = (id, fecha, observaciones, medico, token) => {
+  const updateTurnoHandler = (id, observaciones, token) => {
     dispatch(
       updateTurno({
-        formData: { id, fecha, observaciones, medico },
+        formData: { id, observaciones },
         token,
       })
     ).then(() => {
@@ -85,6 +87,21 @@ const TurnosContainer = () => {
   const cancelTurnoHandler = (id) => {
     dispatch(cancelTurno(id));
   };
+
+  const deleteTurnoHandler = (id) => {
+    dispatch(deleteTurno(id));
+  };
+
+  if (error) {
+    console.log(error);
+    return (
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={clearError}
+      />
+    );
+  }
 
   return (
     <Routes>
@@ -127,11 +144,12 @@ const TurnosContainer = () => {
         path=""
         element={
           <Turnos
-            turnos={turnosDisponibles}
+           // turnos={turnosDisponibles}
             isLoading={isLoading}
             error={error}
             onAsignTurno={asignTurnoHandler}
             onCancelTurno={cancelTurnoHandler}
+            onDeleteTurno={deleteTurnoHandler}
           />
         }
       />

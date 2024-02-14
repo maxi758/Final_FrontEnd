@@ -27,9 +27,12 @@ const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
   );
 
   useEffect(() => {
-    const fetchTurno = async () => {
+    
       try {
-        await onFindOneTurno(turnoId, token);
+        console.log('turnoId', turnoId);
+        console.log('token', token);
+        onFindOneTurno(turnoId, token);
+        console.log('loadedTurno', loadedTurno);
         setFormData(
           {
             observaciones: {
@@ -40,9 +43,7 @@ const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
           true
         );
       } catch (err) {}
-    };
-    fetchTurno();
-  }, [turnoId, token, setFormData]);
+  }, [turnoId]);
 
   const turnoUpdateSubmitHandler = async (event) => {
     event.preventDefault();

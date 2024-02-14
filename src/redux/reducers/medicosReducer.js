@@ -163,3 +163,4 @@ const medicosSlice = createSlice({
 });
 
 export default medicosSlice.reducer;
+export const selectMedicos = (state) => state.medicos.medicos;

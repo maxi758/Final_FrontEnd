@@ -19,7 +19,6 @@ const TurnoItem = (props) => {
     nombre: props.nombre,
     quantity: props.quantity,
   });
-  console.log('props', props);
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
@@ -31,12 +30,6 @@ const TurnoItem = (props) => {
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${props.id}`,
-        'DELETE',
-        null,
-        { Authorization: 'Bearer ' + token }
-      );
       props.onDelete(props.id);
     } catch (err) {}
   };
@@ -44,15 +37,12 @@ const TurnoItem = (props) => {
   const asignarTurnoHandler = async () => {
     try {
       props.onAsignTurno(props.id);
-      props.onDelete(props.id);
     } catch (err) {}
   };
 
   const cancelTurnoHandler = async () => {
     try {
-      console.log('id', props.id);
       props.onCancelTurno(props.id);
-      //props.onDelete(props.id);
     } catch (err) {}
   };
 
