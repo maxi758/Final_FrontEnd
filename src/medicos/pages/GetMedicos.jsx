@@ -10,6 +10,10 @@ const Medicos = () => {
   const { medicos, isLoading, error } = useSelector((state) => state.medicos);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setLoadedMedicos(medicos);
+  }, [medicos]);
+
   const medicoDeletedHandler = (deletedMedicoId) => {
     setLoadedMedicos((prevMedicos) =>
       prevMedicos.filter((medico) => medico._id !== deletedMedicoId)

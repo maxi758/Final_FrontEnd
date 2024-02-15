@@ -20,7 +20,7 @@ export const getMedicos = createAsyncThunk(
       const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer p' + token,
+          Authorization: 'Bearer ' + token,
         },
       });
       console.log(response);
@@ -44,7 +44,7 @@ export const getMedicoById = createAsyncThunk(
       const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer p' + data.token,
+          Authorization: 'Bearer ' + data.token,
         },
       });
       console.log(response);
@@ -67,7 +67,7 @@ export const createMedico = createAsyncThunk(
       const response = await axios.post(url, formData, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer p' + token,
+          Authorization: 'Bearer ' + token,
         },
       });
       console.log(response);
