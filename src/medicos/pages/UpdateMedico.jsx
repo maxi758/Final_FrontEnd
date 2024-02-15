@@ -92,8 +92,16 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
     dispatch(clearError())
   };
 
+  if (isLoading || !loadedMedico ) {
+    return (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   if (error) {
-    console.log(error);
+    console.log('error',error);
     return (
       <ErrorModal
         error={error.message}
@@ -103,16 +111,9 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
     );
   }
 
-  if (isLoading || !loadedMedico ) {
-    return (
-      <div className="center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
   return (
     <React.Fragment>
-      {/* <ErrorModal error={error.message} onClear={clearError} /> */}
+      {error &&<ErrorModal error={error.message} code={error.errorCode} onClear={clearErrorHandler} />}
       <form className="place-form" onSubmit={medicoUpdateSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input

@@ -20,14 +20,14 @@ export const getMedicos = createAsyncThunk(
       const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
+          Authorization: 'Bearer p' + token,
         },
       });
       console.log(response);
       return response.data.medicos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -44,14 +44,14 @@ export const getMedicoById = createAsyncThunk(
       const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + data.token,
+          Authorization: 'Bearer p' + data.token,
         },
       });
       console.log(response);
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -67,14 +67,14 @@ export const createMedico = createAsyncThunk(
       const response = await axios.post(url, formData, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
+          Authorization: 'Bearer p' + token,
         },
       });
       console.log(response);
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -99,7 +99,7 @@ export const updateMedico = createAsyncThunk(
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -163,6 +163,7 @@ const medicosSlice = createSlice({
       })
       .addCase(updateMedico.rejected, (state, action) => {
         state.error = action.payload;
+        console.log
         state.isLoading = false;
         console.log(action.payload);
       })

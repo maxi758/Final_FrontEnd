@@ -14,7 +14,6 @@ import UpdateMedico from '../../medicos/pages/UpdateMedico';
 
 const MedicosContainer = () => {
   const dispatch = useDispatch();
-  const { medicos, isLoading } = useSelector((state) => state.medicos);
   const { token } = useSelector((state) => state.auth);
   const { especialidades } = useSelector((state) => state.especialidades);
   const [error, setError] = useState(null);
@@ -68,7 +67,7 @@ const MedicosContainer = () => {
         token,
       })
     );
-    navigate('/medicos');
+    //navigate('/medicos');
   };
 
   return (
@@ -89,7 +88,7 @@ const MedicosContainer = () => {
       <Route
         path=""
         element={
-          <Medicos isLoading={isLoading} medicos={medicos} error={error} />
+          <Medicos/>
         }
       />
       <Route path="*" element={<Navigate to="/medicos" />} />
