@@ -8,7 +8,7 @@ import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
 
 const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
@@ -16,6 +16,7 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   const { loadedMedico, isLoading, error } = useSelector((state) => state.medicos);
   const { especialidades } = useSelector((state) => state.especialidades);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const medicoId = useParams().id;
   console.log('medicoId: ', medicoId);
   const [isLoadingMedico, setIsLoadingMedico] = useState(true);
@@ -87,13 +88,17 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
     );
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

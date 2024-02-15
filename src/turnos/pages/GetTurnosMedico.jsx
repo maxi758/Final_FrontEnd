@@ -3,12 +3,13 @@ import { useParams } from 'react-router-dom';
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/turnosReducer';
 
 const Turnos = ({ onGetMedicoTurnos, onAsignTurno }) => {
   const { turnosMedico, isLoading, error } = useSelector((state) => state.turnos);
   const medicoId = useParams().id;
+  const dispatch = useDispatch();
   const { loadedTurnos, setLoadedTurnos } = useState([]);
 
   useEffect(() => {
@@ -24,13 +25,17 @@ const Turnos = ({ onGetMedicoTurnos, onAsignTurno }) => {
     );
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

@@ -9,13 +9,14 @@ import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import './PlaceForm.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
 
 const NewMedico = ({ onCreateMedico }) => {
   const { token } = useSelector((state) => state.auth);
   const { especialidades } = useSelector((state) => state.especialidades);
   const { isLoading, error } = useSelector((state) => state.medicos);
+  const dispatch = useDispatch();
   //const [especialidades, setEspecialidades] = useState([]);
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -67,9 +68,13 @@ const NewMedico = ({ onCreateMedico }) => {
     );
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      <ErrorModal error={error} onClear={clearErrorHandler} />
       <form method="POST" className="place-form" onSubmit={placeSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input

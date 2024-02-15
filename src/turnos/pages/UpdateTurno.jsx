@@ -7,13 +7,14 @@ import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import '../../medicos/pages/PlaceForm.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/turnosReducer';
 
 const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
   const { token } = useSelector((state) => state.auth);
   const { isLoading, loadedTurno, error } = useSelector((state) => state.turnos);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const turnoId = useParams().id;
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -45,13 +46,17 @@ const UpdateTurno = ({ onUpdateTurno, onFindOneTurno }) => {
     onUpdateTurno(turnoId, formState.inputs.observaciones.value, token);
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

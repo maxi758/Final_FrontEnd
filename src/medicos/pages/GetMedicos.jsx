@@ -3,9 +3,11 @@ import { Card, CircularProgress } from '@mui/material';
 import MedicoList from '../components/MedicoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { clearError } from '../../redux/reducers/medicosReducer';
+import { useDispatch } from 'react-redux';
 
 const Medicos = ({ isLoading, medicos, error }) => {
   const [loadedMedicos, setLoadedMedicos] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (medicos) {
@@ -19,9 +21,13 @@ const Medicos = ({ isLoading, medicos, error }) => {
     );
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      <ErrorModal error={error} onClear={clearErrorHandler} />
       {isLoading && (
         <div className="center">
           <CircularProgress asOverlay />

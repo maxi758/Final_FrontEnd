@@ -8,13 +8,14 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import '../../medicos/pages/PlaceForm.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/turnosReducer';
 
 const NewTurno = ({ onCreateTurno }) => {
   const { token } = useSelector((state) => state.auth);
   const { medicos } = useSelector((state) => state.medicos);
   const { turnosDisponibles, isLoading, error } = useSelector((state) => state.turnos);
+  const dispatch = useDispatch();
   const [formState, inputHandler, setFormData] = useForm(
     {
       fecha: {
@@ -69,12 +70,16 @@ const NewTurno = ({ onCreateTurno }) => {
     );
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     return (
       <ErrorModal
         error={error.message}
         code={error.code}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

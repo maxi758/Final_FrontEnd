@@ -3,7 +3,7 @@ import { useMatch } from 'react-router-dom';
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/turnosReducer';
 
 const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
@@ -12,6 +12,7 @@ const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
   const estado =
     match?.pathname?.endsWith('cancelados') ?? false ? 'CANCELADO' : 'ASIGNADO';
   console.log('estado', estado);
+  const dispatch = useDispatch();
   const { turnosActivosUsuario, turnosCanceladosUsuario, isLoading, error } =
     useSelector((state) => state.turnos);
 
@@ -35,13 +36,17 @@ const Turnos = ({ onGetMyTurnos, onCancelTurno }) => {
     );
   };*/
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

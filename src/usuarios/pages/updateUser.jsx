@@ -14,15 +14,15 @@ import {
 import { useForm } from '../../hooks/form-hook';
 
 import './Auth.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/authReducer';
 
 const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { token, isLoggedIn, isLoading } = useSelector((state) => state.auth);
   //const key = useParams().key || null;
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log('key: ', searchParams.get('key'));
   const key = searchParams.get('key') || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   console.log('isAuthenticated: ', isAuthenticated);
@@ -102,13 +102,17 @@ const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
     }
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }
