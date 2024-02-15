@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
@@ -83,11 +83,15 @@ export const sendAccountRecoveryEmail = createAsyncThunk(
     console.log(email);
     console.log(url);
     try {
-      const response = await axios.post(url, {email}, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        url,
+        { email },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -99,15 +103,21 @@ export const sendAccountRecoveryEmail = createAsyncThunk(
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async (formData, thunkAPI) => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/reset-password`;
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/usuarios/reset-password`;
     console.log(url);
     try {
-      const response = await axios.patch(url, {formData}, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + formData.token,
-        },
-      });
+      const response = await axios.patch(
+        url,
+        { formData },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + formData.token,
+          },
+        }
+      );
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -115,6 +125,8 @@ export const resetPassword = createAsyncThunk(
     }
   }
 );
+
+export const clearError = createAction('auth/clearError');
 
 const authSlice = createSlice({
   name: 'auth',
@@ -148,6 +160,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         console.log(action.payload);
+        state.error = action.payload;
         state.isLoading = false;
       })
       .addCase(logout.fulfilled, (state, action) => {
@@ -192,6 +205,9 @@ const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         console.log(action.payload);
         state.isLoading = false;
+      })
+      .addCase(clearError, (state) => {
+        state.error = null;
       });
   },
 });

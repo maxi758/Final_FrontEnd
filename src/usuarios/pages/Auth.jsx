@@ -10,14 +10,16 @@ import {
 } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './Auth.css';
+import { clearError } from '../../redux/reducers/authReducer';
 
 const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
   const { token, rol, error } = useSelector((state) => state.auth);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const { isLoading, clearError } = useHttpClient(); // falta adaptar a redux
+  const dispatch = useDispatch();
+  const { isLoading } = useHttpClient(); // falta adaptar a redux
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -89,13 +91,17 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
     }
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError())
+  };
+
   if (error) {
     console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={clearErrorHandler}
       />
     );
   }

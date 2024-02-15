@@ -19,7 +19,7 @@ import { useHttpClient } from '../../hooks/http-hook';
 import './Auth.css';
 import { useSelector } from 'react-redux';
 
-const UpdateUser = ({ onLogin, onAccountRecovery, onResetPassword }) => {
+const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
   const navigate = useNavigate();
   const { token, isLoggedIn, isLoading } = useSelector((state) => state.auth);
   //const key = useParams().key || null;
@@ -27,7 +27,7 @@ const UpdateUser = ({ onLogin, onAccountRecovery, onResetPassword }) => {
   console.log('key: ', searchParams.get('key'));
   const key = searchParams.get('key') || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { error, sendRequest, clearError } = useHttpClient();
+  const {clearError } = useHttpClient();
   console.log('isAuthenticated: ', isAuthenticated);
   useEffect(() => {
     console.log('token: ', token);

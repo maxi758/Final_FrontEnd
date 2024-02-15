@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Auth from '../../usuarios/pages/Auth';
 import UpdateUser from '../../usuarios/pages/updateUser';
 import { useDispatch } from 'react-redux';
@@ -14,6 +14,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 const AuthContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const loginHandler = (email, password) => {
     try {
       dispatch(
@@ -36,8 +37,12 @@ const AuthContainer = () => {
           );
           navigate('/');
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setError(err);
+        });
     } catch (err) {
+      setError(err)
       console.log(err);
     }
   };
@@ -123,6 +128,7 @@ const AuthContainer = () => {
         path="/recover-password"
         element={
           <UpdateUser
+            error={error}
             onLogin={loginHandler}
             onAccountRecovery={accountRecoveryHandler}
             onResetPassword={resetPasswordHandler}
