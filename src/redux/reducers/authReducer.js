@@ -64,7 +64,7 @@ export const login = createAsyncThunk(
         },
       });
       console.log(response);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -145,7 +145,7 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(register.rejected, (state, action) => {
-        console.log(action.payload);
+        state.error = action.payload;
         state.isLoading = false;
       })
       .addCase(login.pending, (state, action) => {
@@ -153,6 +153,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoggedIn = true;
+        console.log(action.payload)
         state.userId = action.payload.usuario._id;
         state.token = action.payload.token;
         state.rol = action.payload.usuario.rol;
@@ -192,7 +193,7 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(sendAccountRecoveryEmail.rejected, (state, action) => {
-        console.log(action.payload);
+        state.error = action.payload;
         state.isLoading = false;
       })
       .addCase(resetPassword.pending, (state, action) => {
@@ -203,7 +204,7 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        console.log(action.payload);
+        state.error = action.payload;
         state.isLoading = false;
       })
       .addCase(clearError, (state) => {

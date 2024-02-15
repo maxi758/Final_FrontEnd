@@ -5,20 +5,19 @@ import { useForm } from '../../hooks/form-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
-import { useHttpClient } from '../../hooks/http-hook';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
 import { useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/medicosReducer';
 
 const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   const { token } = useSelector((state) => state.auth);
-  const { loadedMedico, isLoading } = useSelector((state) => state.medicos);
+  const { loadedMedico, isLoading, error } = useSelector((state) => state.medicos);
   const { especialidades } = useSelector((state) => state.especialidades);
   const navigate = useNavigate();
   const medicoId = useParams().id;
   console.log('medicoId: ', medicoId);
-  const { error, sendRequest, clearError } = useHttpClient();
   const [isLoadingMedico, setIsLoadingMedico] = useState(true);
   const [formState, inputHandler, setFormData] = useForm(
     {

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -7,15 +7,14 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
-import { useHttpClient } from '../../hooks/http-hook';
 import '../../medicos/pages/PlaceForm.css';
 import { useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/turnosReducer';
 
 const NewTurno = ({ onCreateTurno }) => {
   const { token } = useSelector((state) => state.auth);
   const { medicos } = useSelector((state) => state.medicos);
-  const { turnosDisponibles, isLoading } = useSelector((state) => state.turnos);
-  const { error, sendRequest, clearError } = useHttpClient();
+  const { turnosDisponibles, isLoading, error } = useSelector((state) => state.turnos);
   const [formState, inputHandler, setFormData] = useForm(
     {
       fecha: {

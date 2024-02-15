@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useHttpClient } from '../../hooks/http-hook';
-
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/turnosReducer';
 
 const Turnos = ({ onGetMedicoTurnos, onAsignTurno }) => {
-  const { turnosMedico, isLoading } = useSelector((state) => state.turnos);
+  const { turnosMedico, isLoading, error } = useSelector((state) => state.turnos);
   const medicoId = useParams().id;
   const { loadedTurnos, setLoadedTurnos } = useState([]);
-  const { error, clearError } = useHttpClient();
 
   useEffect(() => {
     onGetMedicoTurnos(medicoId);

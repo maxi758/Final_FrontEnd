@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useHttpClient } from '../../hooks/http-hook';
-import { selectAllTurnos } from '../../redux/reducers/turnosReducer';
+import { clearError, selectAllTurnos } from '../../redux/reducers/turnosReducer';
 import { Card, CircularProgress } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useSelector } from 'react-redux';
 
-const Turnos = ({ error, onAsignTurno, onCancelTurno, onDeleteTurno }) => {
-  const { clearError } = useHttpClient();
-  const { turnosDisponibles, isLoading } = useSelector((state) => state.turnos);
+const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
+  const { turnosDisponibles, isLoading, error } = useSelector((state) => state.turnos);
   const orderedTurnos = useSelector(selectAllTurnos);
 
   const AsignTurnoHandler = (turnoId) => {

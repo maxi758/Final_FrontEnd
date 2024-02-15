@@ -1,8 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Navigate,
   useNavigate,
-  useParams,
   useSearchParams,
 } from 'react-router-dom';
 import { Card, Button, CircularProgress } from '@mui/material';
@@ -14,10 +12,10 @@ import {
   VALIDATOR_REQUIRE,
 } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
-import { useHttpClient } from '../../hooks/http-hook';
 
 import './Auth.css';
 import { useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/authReducer';
 
 const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
   const navigate = useNavigate();
@@ -27,7 +25,6 @@ const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
   console.log('key: ', searchParams.get('key'));
   const key = searchParams.get('key') || null;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const {clearError } = useHttpClient();
   console.log('isAuthenticated: ', isAuthenticated);
   useEffect(() => {
     console.log('token: ', token);

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
@@ -8,6 +8,7 @@ const initialState = {
   matricula: '',
   isLoading: false,
   medicos: [],
+  error: null,
 };
 
 export const getMedicos = createAsyncThunk(
@@ -103,6 +104,8 @@ export const updateMedico = createAsyncThunk(
   }
 );
 
+export const clearError = createAction('medicos/clearError');
+
 const medicosSlice = createSlice({
   name: 'medicos',
   initialState,
@@ -117,6 +120,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(getMedicos.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
         console.log(action.payload);
       })
@@ -129,6 +133,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(createMedico.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
         console.log(action.payload);
       })
@@ -141,6 +146,7 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(getMedicoById.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
         console.log(action.payload);
       })
@@ -156,8 +162,12 @@ const medicosSlice = createSlice({
         return state;
       })
       .addCase(updateMedico.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
         console.log(action.payload);
+      })
+      .addCase(clearError, (state) => {
+        state.error = null;
       });
   },
 });

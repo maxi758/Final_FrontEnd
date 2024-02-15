@@ -10,12 +10,13 @@ import { useForm } from '../../hooks/form-hook';
 import { useHttpClient } from '../../hooks/http-hook';
 import './PlaceForm.css';
 import { useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/medicosReducer';
 
 const NewMedico = ({ onCreateMedico }) => {
   const { token } = useSelector((state) => state.auth);
   const { especialidades } = useSelector((state) => state.especialidades);
+  const { isLoading, error } = useSelector((state) => state.medicos);
   //const [especialidades, setEspecialidades] = useState([]);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [formState, inputHandler, setFormData] = useForm(
     {
       nombre: {
