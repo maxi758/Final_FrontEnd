@@ -60,7 +60,7 @@ export const getTurnos = createAsyncThunk(
       return response.data.turnos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -85,7 +85,7 @@ export const getTurnoById = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -105,7 +105,7 @@ export const createTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -127,7 +127,7 @@ export const updateTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -158,7 +158,7 @@ export const getTurnoByUsuario = createAsyncThunk(
       return response.data.turnos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -181,7 +181,7 @@ export const getTurnoByMedico = createAsyncThunk(
       return response.data.turnos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -208,7 +208,7 @@ export const asignTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -235,7 +235,7 @@ export const cancelTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );
@@ -256,7 +256,7 @@ export const deleteTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
     }
   }
 );

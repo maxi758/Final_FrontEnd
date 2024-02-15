@@ -16,7 +16,6 @@ const MedicosContainer = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const { especialidades } = useSelector((state) => state.especialidades);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +27,6 @@ const MedicosContainer = () => {
 
       dispatch(getMedicos(token));
     } catch (err) {
-      setError(err);
       console.log('error: ', err);
     }
   }, [dispatch]);
