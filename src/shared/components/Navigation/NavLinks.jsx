@@ -1,21 +1,21 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'; // NavLink is a special version of the <Link> component that will add styling attributes to the rendered element when it matches the current URL.
 import BasicMenu from './menu';
-import store  from '../../../redux/store';
-import { useDispatch } from 'react-redux';
+import store from '../../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/reducers/authReducer';
 import './NavLinks.css';
 
 const NavLinks = (props) => {
-  const {isLoggedIn, rol  } = store.getState().auth;
+  const { isLoggedIn, rol } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   console.log('isLoggedIn: ', isLoggedIn);
   console.log('rol: ', rol);
   return (
     <ul className="nav-links">
-      <li>
-          <NavLink to="/recover">Cuenta</NavLink>
-        </li>
+      {/* <li>
+        <NavLink to="/recover">Cuenta</NavLink>
+      </li> */}
       {rol === 'ADMIN' && (
         <li>
           <NavLink to="/auth">Usuarios</NavLink>
@@ -49,7 +49,6 @@ const NavLinks = (props) => {
                 label: 'Listado de Medicos',
                 to: '/medicos',
               },
-
             ]}
           />
         </li>
@@ -67,7 +66,6 @@ const NavLinks = (props) => {
                 label: 'Listado de Turnos',
                 to: '/turnos',
               },
-
             ]}
           />
         </li>
@@ -89,7 +87,6 @@ const NavLinks = (props) => {
                 label: 'Listado de Turnos',
                 to: '/turnos',
               },
-
             ]}
           />
         </li>
@@ -101,7 +98,7 @@ const NavLinks = (props) => {
       )}
       {isLoggedIn && (
         <li>
-          <button onClick={ () => dispatch(logout())}>LOGOUT</button>
+          <button onClick={() => dispatch(logout())}>LOGOUT</button>
         </li>
       )}
     </ul>

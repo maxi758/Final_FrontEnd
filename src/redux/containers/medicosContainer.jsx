@@ -21,8 +21,10 @@ const MedicosContainer = () => {
   useEffect(() => {
     try {
       if (!especialidades) {
-        const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/especialidades`;
-        dispatch(fetchEspecialidades(url,token));
+        const url = `${
+          import.meta.env.VITE_REACT_APP_BACKEND_URL
+        }/especialidades`;
+        dispatch(fetchEspecialidades(url, token));
       }
 
       dispatch(getMedicos(token));
@@ -43,8 +45,9 @@ const MedicosContainer = () => {
         formData: { nombre, apellido, matricula, especialidad },
         token,
       })
-    );
-    navigate('/medicos');
+    ).then(() => {
+      navigate('/medicos');
+    });
   };
 
   const findOneMedicoHandler = (id, token) => {
@@ -83,12 +86,7 @@ const MedicosContainer = () => {
           />
         }
       />
-      <Route
-        path=""
-        element={
-          <Medicos/>
-        }
-      />
+      <Route path="" element={<Medicos />} />
       <Route path="*" element={<Navigate to="/medicos" />} />
     </Routes>
   );

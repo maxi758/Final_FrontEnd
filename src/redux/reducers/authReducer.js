@@ -10,6 +10,11 @@ const initialState = {
   error: null,
 };
 
+const getToken = (thunkAPI) => {
+  const state = thunkAPI.getState();
+  return state.auth.token;
+};
+
 export const register = createAsyncThunk(
   'auth/register',
   async (userData, thunkAPI) => {
@@ -32,10 +37,9 @@ export const register = createAsyncThunk(
 
 export const createAdmin = createAsyncThunk(
   'auth/createAdmin',
-  async (userData, token, thunkAPI) => {
+  async (userData, thunkAPI) => {
     const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/usuarios/admin`;
-    console.log(userData);
-    console.log(url);
+    const token = getToken(thunkAPI);
     try {
       const response = await axios.post(url, userData, {
         headers: {

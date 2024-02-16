@@ -38,6 +38,7 @@ export const fetchEspecialidades = (url, token) => {
       console.log('Response from fetch', responseData.data.especialidades);
       dispatch(fetchEspecialidadesSuccess(responseData.data.especialidades));
     } catch (err) {
+      console.log('error', err);
       dispatch(fetchEspecialidadesFail(err));
     }
   };

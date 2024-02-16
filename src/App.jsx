@@ -62,7 +62,7 @@ const App = () => {
         <Route path="/medicos/*" element={<Medicos />} />
         {/* <Route path="/medicos/new" element={<NewMedico />} />
         <Route path="/medicos/:id" element={<EditMedico />} /> */}
-        <Route path="/" element={<Navigate to="/medicos" />} />
+        <Route path="/" element={<Navigate to="/especialidades" />} />
         <Route path="*" element={<Navigate to="/especialidades" />} />
       </Routes>
     );
