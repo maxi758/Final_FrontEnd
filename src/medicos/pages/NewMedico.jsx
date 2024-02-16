@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useEffect } from 'react';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
-import { useHttpClient } from '../../hooks/http-hook';
 import './PlaceForm.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
@@ -72,9 +69,26 @@ const NewMedico = ({ onCreateMedico }) => {
     dispatch(clearError())
   };
 
+  if (error) {
+    return (
+      <ErrorModal
+        error={error.message}
+        code={error.code}
+        onClear={clearErrorHandler}
+      />
+    );
+  }
+  if (isLoading || !especialidades) {
+    return (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearErrorHandler} />
+      {/* <ErrorModal error={error.message} onClear={clearErrorHandler} /> */}
       <form method="POST" className="place-form" onSubmit={placeSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
         <Input

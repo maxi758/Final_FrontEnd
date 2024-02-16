@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-import { Card, CircularProgress } from '@mui/material';
+import { Card, CircularProgress, Button } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import '../../medicos/components/ProductItem.css';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
-import Button from '../../shared/components/FormElements/Button';
+//import Button from '../../shared/components/FormElements/Button';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const TurnoItem = (props) => {
   const { isLoading } = useSelector((state) => state.turnos);
@@ -56,15 +57,24 @@ const TurnoItem = (props) => {
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
-        header="Are you sure?"
+        header="Está seguro de eliminar?"
         footerClass="product-item__modal-actions"
         footer={
           <React.Fragment>
-            <Button inverse onClick={cancelDeleteHandler}>
-              CANCEL
+            <Button
+              inverse
+              color="warning"
+              variant="contained"
+              onClick={cancelDeleteHandler}
+            >
+              CANCELAR
             </Button>
-            <Button danger onClick={confirmDeleteHandler}>
-              DELETE
+            <Button
+              color="error"
+              variant="contained"
+              onClick={confirmDeleteHandler}
+            >
+              ELIMINAR
             </Button>
           </React.Fragment>
         }
@@ -87,20 +97,41 @@ const TurnoItem = (props) => {
           </div>
           <div className="product-item__actions">
             {rol === 'ADMIN' && (
-              <Button to={`/turnos/${props.id}`}>EDITAR</Button>
+              <Button
+                color="warning"
+                variant="contained"
+                component={Link}
+                to={`/turnos/${props.id}`}
+              >
+                EDITAR
+              </Button>
             )}
             {rol === 'ADMIN' && (
-              <Button danger onClick={showDeleteWarningHandler}>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={showDeleteWarningHandler}
+              >
                 ELIMINAR
               </Button>
             )}
-            {rol === 'PACIENTE' && props.isMyTurnos===false && (
-              <Button onClick={asignarTurnoHandler}>ASIGNAR</Button>
+            {rol === 'PACIENTE' && props.isMyTurnos === false && (
+              <Button
+                color="success"
+                variant="contained"
+                onClick={asignarTurnoHandler}
+              >
+                ASIGNAR
+              </Button>
             )}
             {rol === 'PACIENTE' &&
               props.isMyTurnos &&
               props.selectedEstado === 'ASIGNADO' && (
-                <Button danger onClick={cancelTurnoHandler}>
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={cancelTurnoHandler}
+                >
                   CANCELAR
                 </Button>
               )}

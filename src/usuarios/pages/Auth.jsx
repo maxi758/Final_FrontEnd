@@ -40,7 +40,10 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
       setFormData(
         {
           ...formState.inputs,
-          nombre: undefined,
+          nombre: {
+            value: undefined,
+            isValid: false,
+          }
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -110,7 +113,7 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
       {/* <ErrorModal error={error.message} onClear={errorHandler} /> */}
       <Card className="authentication">
         {isLoading && <CircularProgress asOverlay />}
-        <h2>Login Required</h2>
+        <h2>Ingrese con su cuenta</h2>
         <hr />
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (
@@ -164,11 +167,12 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
             errorText="Ingrese una contraseña válida de al menos 5 caracteres"
             onInput={inputHandler}
           />
-          <Button type="submit" disabled={!formState.isValid}>
+          <Button variant='contained' type="submit" disabled={!formState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
           {!isLoginMode && rol === 'ADMIN' && (
             <Button
+            variant='contained'
               type="submit"
               onClick={createAdminHandler}
               disabled={!formState.isValid}
@@ -177,12 +181,12 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
             </Button>
           )}
         </form>
-        <Button inverse onClick={switchModeHandler}>
-          CAMBIAR A {isLoginMode ? 'SIGNUP' : 'LOGIN'}
+        <Button  variant='contained' onClick={switchModeHandler}>
+          CAMBIAR A {isLoginMode ? 'REGISTRARSE' : 'INICIAR SESION'}
         </Button>
         <hr />
         <Link to="/auth/recover-password">
-          <Button>RECUPERAR CONTRASEÑA</Button>
+          <Button color='info' variant='contained' >RECUPERAR CONTRASEÑA</Button>
         </Link>
       </Card>
     </React.Fragment>

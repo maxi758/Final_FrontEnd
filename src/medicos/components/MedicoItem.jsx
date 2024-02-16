@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CircularProgress } from '@mui/material';
+import { Card, CircularProgress, Button } from '@mui/material';
 import { useHttpClient } from '../../hooks/http-hook';
 
 import './ProductItem.css';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
-import Button from '../../shared/components/FormElements/Button';
+//import Button from '../../shared/components/FormElements/Button';
 import { useSelector } from 'react-redux';
 
 const MedicoItem = (props) => {
@@ -75,6 +75,8 @@ const MedicoItem = (props) => {
           </div>
           <div className="product-item__actions">
             <Button
+              color="success"
+              variant="contained"
               component={Link}
               to={{
                 pathname: `/turnos/medicos/${props.id}`,
@@ -86,10 +88,10 @@ const MedicoItem = (props) => {
           </div>
           <div className="product-item__actions">
             {rol === 'ADMIN' && (
-              <Button to={`/medicos/${props.id}`}>EDITAR</Button>
+              <Button color="warning" variant="contained" component={Link} to={`/medicos/${props.id}`}>EDITAR</Button>
             )}
             {rol === 'ADMIN' && (
-              <Button danger onClick={showDeleteWarningHandler}>
+              <Button color="error" variant="contained" onClick={showDeleteWarningHandler}>
                 ELIMINAR
               </Button>
             )}
