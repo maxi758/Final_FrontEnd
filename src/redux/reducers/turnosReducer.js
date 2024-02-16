@@ -27,7 +27,9 @@ const initialState = turnosAdapter.getInitialState({
   turnosCanceladosUsuario: [],
   turnosMedico: [],
   medicoID: '',
-  error: null
+  error: null,
+  total: 0,
+  totalPages: 1,
 });
 
 const getState = (thunkAPI) => {
@@ -45,10 +47,18 @@ const getUserId = (thunkAPI) => {
   return state.auth.userId;
 };
 
+const updatePagination = (state) => {
+  state.total = Object.keys(state.entities).length;
+  state.totalPages = Math.ceil(state.total / 10); // Replace 10 with your actual items per page
+};
+
 export const getTurnos = createAsyncThunk(
   'turnos/getTurnos',
-  async (token, thunkAPI) => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos`;
+  async (page = 1, thunkAPI) => {
+    const url = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/turnos?page=${page}`;
+    const token = getToken(thunkAPI);
     try {
       const response = await axios.get(url, {
         headers: {
@@ -57,17 +67,20 @@ export const getTurnos = createAsyncThunk(
         },
       });
       console.log(response);
-      return response.data.turnos;
+      return response.data;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
 
 export const getTurnoById = createAsyncThunk(
   'turnos/getTurnoById',
-  async ( data , thunkAPI) => {
+  async (data, thunkAPI) => {
     console.log(data);
     const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/turnos/${
       data.data.id
@@ -85,7 +98,10 @@ export const getTurnoById = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -105,7 +121,10 @@ export const createTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -127,7 +146,10 @@ export const updateTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -158,7 +180,10 @@ export const getTurnoByUsuario = createAsyncThunk(
       return response.data.turnos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -181,7 +206,10 @@ export const getTurnoByMedico = createAsyncThunk(
       return response.data.turnos;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -208,7 +236,10 @@ export const asignTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -235,7 +266,10 @@ export const cancelTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -256,7 +290,10 @@ export const deleteTurno = createAsyncThunk(
       return response.data.turno;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -267,137 +304,146 @@ const turnosSlice = createSlice({
   name: 'turnos',
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(getTurnos.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(getTurnos.fulfilled, (state, action) => {
-      turnosAdapter.setAll(state, action.payload);
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(getTurnos.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(getTurnoById.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(getTurnoById.fulfilled, (state, action) => {
-      state.loadedTurno = action.payload;
-      console.log('loaded', state.loadedTurno)
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(getTurnoById.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(createTurno.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(createTurno.fulfilled, (state, action) => {
-      console.log('action.payload', action.payload);
-      turnosAdapter.addOne(state, action.payload);
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(createTurno.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(updateTurno.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(updateTurno.fulfilled, (state, action) => {
-      state.loadedTurno = action.payload;
-      turnosAdapter.upsertOne(state, action.payload);
-      /*state.turnos = state.turnos.map((turno) =>
+    builder
+      .addCase(getTurnos.pending, (state, action) => {
+        //turnosAdapter.setOne(state.error, null);
+        state.isLoading = true;
+      })
+      .addCase(getTurnos.fulfilled, (state, action) => {
+        turnosAdapter.setAll(state, action.payload.turnos);
+        state.total = action.payload.total;
+        if (action.payload.totalPages > 1) {
+          state.totalPages = action.payload.totalPages;
+        }
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(getTurnos.rejected, (state, action) => {
+        //turnosAdapter.setOne(state.error, action.payload)
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getTurnoById.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getTurnoById.fulfilled, (state, action) => {
+        state.loadedTurno = action.payload;
+        console.log('loaded', state.loadedTurno);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(getTurnoById.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(createTurno.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(createTurno.fulfilled, (state, action) => {
+        console.log('action.payload', action.payload);
+        turnosAdapter.addOne(state, action.payload);
+        updatePagination(state);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(createTurno.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateTurno.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTurno.fulfilled, (state, action) => {
+        state.loadedTurno = action.payload;
+        turnosAdapter.upsertOne(state, action.payload);
+        /*state.turnos = state.turnos.map((turno) =>
         turno._id === action.payload._id ? action.payload : turno
       );*/
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(updateTurno.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(getTurnoByUsuario.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(getTurnoByUsuario.fulfilled, (state, action) => {
-      if (action.meta.arg === 'CANCELADO') {
-        state.turnosCanceladosUsuario = action.payload;
-      } else {
-        state.turnosActivosUsuario = action.payload;
-      }
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(getTurnoByUsuario.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(getTurnoByMedico.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(getTurnoByMedico.fulfilled, (state, action) => {
-      state.turnosMedico = action.payload;
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(getTurnoByMedico.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(asignTurno.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(asignTurno.fulfilled, (state, action) => {
-      state.loadedTurno = action.payload;
-      turnosAdapter.removeOne(state, action.payload._id);
-      state.turnosMedico = state.turnosMedico.filter(
-        (turno) => turno._id !== action.payload._id
-      );
-      state.turnosActivosUsuario.push(action.payload);
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(asignTurno.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(cancelTurno.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(cancelTurno.fulfilled, (state, action) => {
-      state.loadedTurno = action.payload;
-      state.turnosActivosUsuario = state.turnosActivosUsuario.filter(
-        (turno) => turno._id !== action.payload._id
-      );
-      state.turnosCanceladosUsuario.push(action.payload);
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(cancelTurno.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(deleteTurno.pending, (state, action) => {
-      state.isLoading = true;
-    })
-    .addCase(deleteTurno.fulfilled, (state, action) => {
-      turnosAdapter.removeOne(state, action.payload._id);
-      state.isLoading = false;
-      return state;
-    })
-    .addCase(deleteTurno.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    })
-    .addCase(clearError, (state) => {
-      state.error = null;
-    });
-
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(updateTurno.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getTurnoByUsuario.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getTurnoByUsuario.fulfilled, (state, action) => {
+        if (action.meta.arg === 'CANCELADO') {
+          state.turnosCanceladosUsuario = action.payload;
+        } else {
+          state.turnosActivosUsuario = action.payload;
+        }
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(getTurnoByUsuario.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getTurnoByMedico.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getTurnoByMedico.fulfilled, (state, action) => {
+        state.turnosMedico = action.payload;
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(getTurnoByMedico.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(asignTurno.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(asignTurno.fulfilled, (state, action) => {
+        state.loadedTurno = action.payload;
+        turnosAdapter.removeOne(state, action.payload._id);
+        updatePagination(state);
+        state.turnosMedico = state.turnosMedico.filter(
+          (turno) => turno._id !== action.payload._id
+        );
+        state.turnosActivosUsuario.push(action.payload);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(asignTurno.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(cancelTurno.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(cancelTurno.fulfilled, (state, action) => {
+        state.loadedTurno = action.payload;
+        state.turnosActivosUsuario = state.turnosActivosUsuario.filter(
+          (turno) => turno._id !== action.payload._id
+        );
+        state.turnosCanceladosUsuario.push(action.payload);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(cancelTurno.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(deleteTurno.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTurno.fulfilled, (state, action) => {
+        turnosAdapter.removeOne(state, action.payload._id);
+        updatePagination(state);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(deleteTurno.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(clearError, (state) => {
+        state.error = null;
+      });
   },
 });
 
@@ -406,5 +452,5 @@ export default turnosSlice.reducer;
 export const {
   selectAll: selectAllTurnos,
   selectById: selectTurnoById,
-  selectIds: selectTurnoIds
+  selectIds: selectTurnoIds,
 } = turnosAdapter.getSelectors((state) => state.turnos);

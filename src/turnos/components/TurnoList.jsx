@@ -33,8 +33,8 @@ const TurnoList = (props) => {
       <ul className="product-list">
         {props.items.map((turno) => (
           <TurnoItem
-            key={turno.id}
-            id={turno.id}
+            key={turno._id}
+            id={turno._id}
             medico={turno.medico}
             fecha={new Date(turno.fecha).toLocaleString()}
             observaciones={turno.observaciones}

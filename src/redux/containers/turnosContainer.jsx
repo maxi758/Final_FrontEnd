@@ -12,6 +12,7 @@ import {
   cancelTurno,
   deleteTurno,
   selectAllTurnos,
+  clearError,
 } from '../reducers/turnosReducer';
 import { getMedicos } from '../reducers/medicosReducer';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -38,7 +39,7 @@ const TurnosContainer = () => {
       if (!medicos) {
         dispatch(getMedicos(token));
       }
-      dispatch(getTurnos(token));
+      dispatch(getTurnos());
     } catch (err) {
       setError(err);
       console.log('error: ', err);
@@ -89,7 +90,10 @@ const TurnosContainer = () => {
   };
 
   const deleteTurnoHandler = (id) => {
-    dispatch(deleteTurno(id));
+    console.log('id: ', id);
+    dispatch(deleteTurno(id)).then(() => {
+      dispatch(getTurnos());
+    });
   };
 
   if (error) {
@@ -98,7 +102,7 @@ const TurnosContainer = () => {
       <ErrorModal
         error={error.message}
         code={error.errorCode}
-        onClear={clearError}
+        onClear={dispatch(clearError())}
       />
     );
   }

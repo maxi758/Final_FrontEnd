@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { clearError, selectAllTurnos } from '../../redux/reducers/turnosReducer';
-import { Card, CircularProgress } from '@mui/material';
+import {
+  clearError,
+  getTurnos,
+  selectAllTurnos,
+} from '../../redux/reducers/turnosReducer';
+import { Card, CircularProgress, Pagination } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
-  const { turnosDisponibles, isLoading, error } = useSelector((state) => state.turnos);
+  const { turnosDisponibles, isLoading, error, totalPages } = useSelector(
+    (state) => state.turnos
+  );
   const orderedTurnos = useSelector(selectAllTurnos);
+  console.log('orderedTurnos', orderedTurnos.length);
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
 
   const AsignTurnoHandler = (turnoId) => {
     onAsignTurno(turnoId);
@@ -23,17 +31,27 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
   };
 
   const clearErrorHandler = () => {
-    dispatch(clearError())
+    dispatch(clearError());
+  };
+
+  const changePageHandler = (event, value) => {
+    setPage(value);
+    dispatch(getTurnos(value));
   };
 
   if (error) {
-    console.log(error);
     return (
       <ErrorModal
         error={error.message}
         code={error.errorCode}
         onClear={clearErrorHandler}
       />
+      // <div className="center">
+      //   <Card>
+      //     <h2>{error.errorCode}</h2>
+      //     <h3>{error.message}</h3>
+      //   </Card>
+      // </div>
     );
   }
 
@@ -44,7 +62,7 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {!turnosDisponibles && !isLoading && (
+      {!orderedTurnos && !isLoading && (
         <div className="center">
           <Card>
             <h2>No hay turnos</h2>
@@ -52,13 +70,28 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
         </div>
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
-      {!isLoading && turnosDisponibles && (
-        <TurnoList
-          items={orderedTurnos}
-          onDeleteTurno={turnoDeletedHandler}
-          onAsignTurno={AsignTurnoHandler}
-          onCancelTurno={cancelTurnoHandler}
-        />
+      {!isLoading && orderedTurnos.length!==0 && (
+        <div className="center">
+          <TurnoList
+            items={orderedTurnos}
+            onDeleteTurno={turnoDeletedHandler}
+            onAsignTurno={AsignTurnoHandler}
+            onCancelTurno={cancelTurnoHandler}
+          />
+
+            <Pagination
+              count={totalPages}
+              //variant="outlined"
+              color="primary"
+              shape="rounded"
+              page={page}
+              onChange={changePageHandler}
+              sx={{
+                width: 300,
+                color: 'success.main',
+              }}
+            />
+        </div>
       )}
     </React.Fragment>
   );
