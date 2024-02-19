@@ -13,19 +13,27 @@
 
 .authentication form {
   margin-bottom: 1rem;
-  border-radius: 1rem;
 }
 
-.authentication Input{
+.authentication form Input{
+  width: 90%;
   margin: 1rem;
   border-radius: 0.5rem;
   padding: auto;
 }
 
+.authentication Link {
+  margin: 2rem;
+}
+
 hr {
   border: none;
-  border-top: 1px solid #f3f3f3; /* Change to the color you want */
-  margin: 20px 0; /* Add some margin to give it space */
+  border-top: 1px solid #d3d1d1; 
+  margin: 10px 0; 
+}
+
+.auth-link {
+  margin: 2rem;
 }
 
 .auth-link:hover {
