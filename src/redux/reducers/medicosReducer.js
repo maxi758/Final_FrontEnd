@@ -30,7 +30,7 @@ const getToken = (thunkAPI) => {
 export const getMedicos = createAsyncThunk(
   'medicos/getMedicos',
   async (page = 1, thunkAPI) => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`;
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos?page=${page}`;
     const token = getToken(thunkAPI);
     console.log('url', url);
     try {

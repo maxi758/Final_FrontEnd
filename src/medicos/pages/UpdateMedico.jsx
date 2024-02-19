@@ -103,7 +103,7 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
 
   if (error) {
     return (
-      <Dialog open={error} onClear={clearErrorHandler}>
+      <Dialog open={error}>
         <DialogTitle>
           Ha ocurrido un error: {`Código ${error.errorCode}`}
         </DialogTitle>

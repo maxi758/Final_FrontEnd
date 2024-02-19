@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Pagination } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Pagination,
+} from '@mui/material';
 import MedicoList from '../components/MedicoList';
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { clearError, getMedicos } from '../../redux/reducers/medicosReducer';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Medicos = ({onDeleteMedico}) => {
+const Medicos = ({ onDeleteMedico }) => {
   const [loadedMedicos, setLoadedMedicos] = useState([]);
-  const { medicos, isLoading, error, totalPages } = useSelector((state) => state.medicos);
+  const { medicos, isLoading, error, totalPages } = useSelector(
+    (state) => state.medicos
+  );
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
 
@@ -16,7 +28,7 @@ const Medicos = ({onDeleteMedico}) => {
   }, [medicos]);
 
   const medicoDeletedHandler = (deletedMedicoId) => {
-    onDeleteMedico(deletedMedicoId)
+    onDeleteMedico(deletedMedicoId);
   };
 
   const clearErrorHandler = () => {
@@ -31,23 +43,23 @@ const Medicos = ({onDeleteMedico}) => {
   return (
     <React.Fragment>
       {error && (
-       <Dialog open={error} onClear={clearErrorHandler}>
-       <DialogTitle>
-         Ha ocurrido un error: {`Código ${error.errorCode}`}
-       </DialogTitle>
-       <DialogContent>
-         <DialogContentText>{error.message}</DialogContentText>
-       </DialogContent>
-       <DialogActions>
-         <Button
-           color="success"
-           variant="contained"
-           onClick={clearErrorHandler}
-         >
-           OK
-         </Button>
-       </DialogActions>
-     </Dialog>
+        <Dialog open={error}>
+          <DialogTitle>
+            Ha ocurrido un error: {`Código ${error.errorCode}`}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>{error.message}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="success"
+              variant="contained"
+              onClick={clearErrorHandler}
+            >
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
       {isLoading && (
         <div className="center">
