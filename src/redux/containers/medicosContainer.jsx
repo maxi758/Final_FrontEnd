@@ -6,11 +6,13 @@ import {
   createMedico,
   updateMedico,
   getMedicoById,
+  deleteMedico,
 } from '../reducers/medicosReducer';
 import { fetchEspecialidades } from '../actions/especialidadesActions';
 import Medicos from '../../medicos/pages/GetMedicos';
 import NewMedico from '../../medicos/pages/NewMedico';
 import UpdateMedico from '../../medicos/pages/UpdateMedico';
+import { clearTurnosMedico } from '../reducers/turnosReducer';
 
 const MedicosContainer = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const MedicosContainer = () => {
         dispatch(fetchEspecialidades(url, token));
       }
 
-      dispatch(getMedicos(token));
+      dispatch(getMedicos());
     } catch (err) {
       console.log('error: ', err);
     }
@@ -68,7 +70,13 @@ const MedicosContainer = () => {
         token,
       })
     );
-    //navigate('/medicos');
+    navigate('/medicos');
+  };
+
+  const deleteMedicoHandler = (id) => {
+    dispatch(deleteMedico({ id, token })).then(() => {
+      dispatch(clearTurnosMedico());
+    });
   };
 
   return (
@@ -86,7 +94,10 @@ const MedicosContainer = () => {
           />
         }
       />
-      <Route path="" element={<Medicos />} />
+      <Route
+        path=""
+        element={<Medicos onDeleteMedico={deleteMedicoHandler} />}
+      />
       <Route path="*" element={<Navigate to="/medicos" />} />
     </Routes>
   );

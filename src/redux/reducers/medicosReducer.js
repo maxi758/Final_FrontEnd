@@ -9,13 +9,30 @@ const initialState = {
   isLoading: false,
   medicos: [],
   error: null,
+  total: 0,
+  totalPages: 1,
+};
+
+const updatePagination = (state) => {
+  state.total = Object.keys(state.medicos).length;
+  if (state.total === 0) {
+    state.totalPages = 1;
+    return;
+  }
+  state.totalPages = Math.ceil(state.total / 10);
+};
+
+const getToken = (thunkAPI) => {
+  const state = thunkAPI.getState();
+  return state.auth.token;
 };
 
 export const getMedicos = createAsyncThunk(
   'medicos/getMedicos',
-  async (token, thunkAPI) => {
+  async (page = 1, thunkAPI) => {
     const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos`;
-    console.log(url);
+    const token = getToken(thunkAPI);
+    console.log('url', url);
     try {
       const response = await axios.get(url, {
         headers: {
@@ -24,10 +41,13 @@ export const getMedicos = createAsyncThunk(
         },
       });
       console.log(response);
-      return response.data.medicos;
+      return response.data;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -51,7 +71,10 @@ export const getMedicoById = createAsyncThunk(
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -74,7 +97,10 @@ export const createMedico = createAsyncThunk(
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -99,7 +125,33 @@ export const updateMedico = createAsyncThunk(
       return response.data.medico;
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue({message:error.response.data.message, errorCode:error.response.status});
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
+    }
+  }
+);
+
+export const deleteMedico = createAsyncThunk(
+  'medicos/deleteMedico',
+  async ({ id, token }, thunkAPI) => {
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${id}`;
+    try {
+      const response = await axios.delete(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      console.log(response);
+      return id;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -115,7 +167,11 @@ const medicosSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getMedicos.fulfilled, (state, action) => {
-        state.medicos = action.payload;
+        state.medicos = action.payload.medicos;
+        state.total = action.payload.total;
+        if (action.payload.totalPages > 1) {
+          state.totalPages = action.payload.totalPages;
+        }
         state.isLoading = false;
         return state;
       })
@@ -130,6 +186,7 @@ const medicosSlice = createSlice({
       .addCase(createMedico.fulfilled, (state, action) => {
         state.isLoading = false;
         state.medicos.push(action.payload);
+        updatePagination(state);
         return state;
       })
       .addCase(createMedico.rejected, (state, action) => {
@@ -163,7 +220,23 @@ const medicosSlice = createSlice({
       })
       .addCase(updateMedico.rejected, (state, action) => {
         state.error = action.payload;
-        console.log
+        console.log;
+        state.isLoading = false;
+        console.log(action.payload);
+      })
+      .addCase(deleteMedico.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteMedico.fulfilled, (state, action) => {
+        state.medicos = state.medicos.filter(
+          (medico) => medico._id !== action.payload
+        );
+        updatePagination(state);
+        state.isLoading = false;
+        return state;
+      })
+      .addCase(deleteMedico.rejected, (state, action) => {
+        state.error = action.payload;
         state.isLoading = false;
         console.log(action.payload);
       })

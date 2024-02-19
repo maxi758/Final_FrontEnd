@@ -7,12 +7,14 @@ import './ProductItem.css';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 //import Button from '../../shared/components/FormElements/Button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError } from '../../redux/reducers/medicosReducer';
 
 const MedicoItem = (props) => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error} = useSelector((state) => state.medicos);
   const { token, rol } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const dispatch = useDispatch();
   const [item, setItem] = useState({
     id: props.id,
     nombre: props.nombre,
@@ -29,31 +31,40 @@ const MedicoItem = (props) => {
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
-      await sendRequest(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/medicos/${props.id}`,
-        'DELETE',
-        null,
-        { Authorization: 'Bearer ' + token }
-      );
       props.onDelete(props.id);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const clearErrorHandler = () => {
+    dispatch(clearError());
   };
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
+      {error &&<ErrorModal error={error.message} onClear={clearErrorHandler} />}
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
-        header="Are you sure?"
+        header="Está seguro?"
         footerClass="product-item__modal-actions"
         footer={
           <React.Fragment>
-            <Button inverse onClick={cancelDeleteHandler}>
-              CANCEL
+            <Button
+              inverse
+              color="warning"
+              variant="contained"
+              onClick={cancelDeleteHandler}
+            >
+              CANCELAR
             </Button>
-            <Button danger onClick={confirmDeleteHandler}>
-              DELETE
+            <Button
+              color="error"
+              variant="contained"
+              onClick={confirmDeleteHandler}
+            >
+              ELIMINAR
             </Button>
           </React.Fragment>
         }
