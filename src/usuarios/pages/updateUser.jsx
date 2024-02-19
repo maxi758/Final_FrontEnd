@@ -17,10 +17,10 @@ import './Auth.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/authReducer';
 
-const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
+const UpdateUser = ({ onLogin, onAccountRecovery, onResetPassword }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { token, isLoggedIn, isLoading } = useSelector((state) => state.auth);
+  const { token, isLoggedIn, isLoading, error } = useSelector((state) => state.auth);
   //const key = useParams().key || null;
   const [searchParams, setSearchParams] = useSearchParams();
   const key = searchParams.get('key') || null;
@@ -119,7 +119,7 @@ const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
 
   return (
     <React.Fragment>
-      {/* <ErrorModal error={error} onClear={clearError} /> */}
+      {error && <ErrorModal error={error.message} onClear={clearErrorHandler} /> }
       <Card className="authentication">
         {isLoading && <CircularProgress />}
         <h2>

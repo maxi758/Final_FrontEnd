@@ -30,7 +30,10 @@ export const register = createAsyncThunk(
       console.log(response.data);
       return response.data.usuario;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -50,7 +53,10 @@ export const createAdmin = createAsyncThunk(
       console.log(response.data);
       return response.data.usuario;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -70,7 +76,10 @@ export const login = createAsyncThunk(
       console.log(response);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -99,7 +108,10 @@ export const sendAccountRecoveryEmail = createAsyncThunk(
       console.log(response.data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -114,7 +126,7 @@ export const resetPassword = createAsyncThunk(
     try {
       const response = await axios.patch(
         url,
-         formData ,
+        { formData },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -125,7 +137,10 @@ export const resetPassword = createAsyncThunk(
       console.log(response.data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+        errorCode: error.response.status,
+      });
     }
   }
 );
@@ -157,7 +172,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoggedIn = true;
-        console.log(action.payload)
+        console.log(action.payload);
         state.userId = action.payload.usuario._id;
         state.token = action.payload.token;
         state.rol = action.payload.usuario.rol;
@@ -209,6 +224,7 @@ const authSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.error = action.payload;
+        console.log(action.payload);
         state.isLoading = false;
       })
       .addCase(clearError, (state) => {

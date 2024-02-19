@@ -8,6 +8,7 @@ import {
   createAdmin,
   sendAccountRecoveryEmail,
   resetPassword,
+  clearError,
 } from '../reducers/authReducer';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
@@ -120,6 +121,17 @@ const AuthContainer = () => {
       console.log(error);
     }
   };
+
+  if (error) {
+    console.log(error);
+    return (
+      <ErrorModal
+        error={error.message}
+        code={error.errorCode}
+        onClear={dispatch(clearError())}
+      />
+    );
+  }
 
   // return <Auth onLogin={loginHandler} onRegister={registerHandler} onCreateAdmin={createAdminHandler} />;
   return (
