@@ -76,7 +76,7 @@ const TurnosContainer = () => {
         token,
       })
     ).then(() => {
-      dispatch(getTurnos(token));
+      dispatch(getTurnos());
     });
     navigate('/turnos');
   };
