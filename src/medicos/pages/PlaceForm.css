@@ -9,4 +9,9 @@
     border-radius: 6px;
     background: white;
   }
+
+  .place-form button:hover {
+    color: blue; /* Change to the color you want on hover */
+  text-decoration: underline;
+  }
   

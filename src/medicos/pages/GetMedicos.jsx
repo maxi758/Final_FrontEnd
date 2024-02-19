@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, CircularProgress, Pagination } from '@mui/material';
+import { Box, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Pagination } from '@mui/material';
 import MedicoList from '../components/MedicoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { clearError, getMedicos } from '../../redux/reducers/medicosReducer';
@@ -31,11 +31,23 @@ const Medicos = ({onDeleteMedico}) => {
   return (
     <React.Fragment>
       {error && (
-        <ErrorModal
-          error={error.message}
-          code={error.errorCode}
-          onClear={clearErrorHandler}
-        />
+       <Dialog open={error} onClear={clearErrorHandler}>
+       <DialogTitle>
+         Ha ocurrido un error: {`Código ${error.errorCode}`}
+       </DialogTitle>
+       <DialogContent>
+         <DialogContentText>{error.message}</DialogContentText>
+       </DialogContent>
+       <DialogActions>
+         <Button
+           color="success"
+           variant="contained"
+           onClick={clearErrorHandler}
+         >
+           OK
+         </Button>
+       </DialogActions>
+     </Dialog>
       )}
       {isLoading && (
         <div className="center">

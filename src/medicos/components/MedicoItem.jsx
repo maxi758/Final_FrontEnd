@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CircularProgress, Button } from '@mui/material';
-import { useHttpClient } from '../../hooks/http-hook';
+import {
+  Card,
+  CircularProgress,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 
 import './ProductItem.css';
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import Modal from '../../shared/components/UIElements/Modal';
-//import Button from '../../shared/components/FormElements/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
 
 const MedicoItem = (props) => {
-  const { isLoading, error} = useSelector((state) => state.medicos);
+  const { isLoading, error } = useSelector((state) => state.medicos);
   const { token, rol } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const dispatch = useDispatch();
-  const [item, setItem] = useState({
-    id: props.id,
-    nombre: props.nombre,
-    quantity: props.quantity,
-  });
+
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
@@ -31,7 +32,7 @@ const MedicoItem = (props) => {
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
-      props.onDelete(props.id);
+      props.onDelete(props.idis);
     } catch (err) {
       console.log(err);
     }
@@ -43,37 +44,53 @@ const MedicoItem = (props) => {
 
   return (
     <React.Fragment>
-      {error &&<ErrorModal error={error.message} onClear={clearErrorHandler} />}
-      <Modal
-        show={showConfirmModal}
-        onCancel={cancelDeleteHandler}
-        header="Está seguro?"
-        footerClass="product-item__modal-actions"
-        footer={
-          <React.Fragment>
+      {error && (
+        // <ErrorModal error={error.message} onClear={clearErrorHandler} />
+        <Dialog open={error} onClear={clearErrorHandler}>
+          <DialogTitle>
+            Ha ocurrido un error: {`Código ${error.errorCode}`}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>{error.message}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
             <Button
-              inverse
-              color="warning"
+              color="success"
               variant="contained"
-              onClick={cancelDeleteHandler}
+              onClick={clearErrorHandler}
             >
-              CANCELAR
+              OK
             </Button>
-            <Button
-              color="error"
-              variant="contained"
-              onClick={confirmDeleteHandler}
-            >
-              ELIMINAR
-            </Button>
-          </React.Fragment>
-        }
-      >
-        <p>
-          Estás seguro que deseas eliminar este medico? Una vez eliminado no se
-          podrá recuperar.
-        </p>
-      </Modal>
+          </DialogActions>
+        </Dialog>
+      )}
+      <Dialog open={showConfirmModal} onCancel={cancelDeleteHandler}>
+        <DialogTitle id="alert-dialog-title">
+          {'Borrar este médico?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Estás seguro que deseas eliminar este medico? Una vez eliminado no
+            se podrá recuperar.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="warning"
+            variant="contained"
+            onClick={cancelDeleteHandler}
+          >
+            CANCELAR
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={confirmDeleteHandler}
+          >
+            ELIMINAR
+          </Button>
+        </DialogActions>
+      </Dialog>
       <li className="product-item">
         <Card className="product-item__content">
           {isLoading && <CircularProgress asOverlay />}
@@ -99,10 +116,21 @@ const MedicoItem = (props) => {
           </div>
           <div className="product-item__actions">
             {rol === 'ADMIN' && (
-              <Button color="warning" variant="contained" component={Link} to={`/medicos/${props.id}`}>EDITAR</Button>
+              <Button
+                color="warning"
+                variant="contained"
+                component={Link}
+                to={`/medicos/${props.id}`}
+              >
+                EDITAR
+              </Button>
             )}
             {rol === 'ADMIN' && (
-              <Button color="error" variant="contained" onClick={showDeleteWarningHandler}>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={showDeleteWarningHandler}
+              >
                 ELIMINAR
               </Button>
             )}

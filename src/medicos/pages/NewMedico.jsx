@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import Input from '../../shared/components/FormElements/Input';
-import Button from '../../shared/components/FormElements/Button';
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import './PlaceForm.css';
@@ -47,7 +53,7 @@ const NewMedico = ({ onCreateMedico }) => {
             isValid: true,
           },
         },
-        true
+        false
       );
     }
   }, [token, especialidades]);
@@ -66,22 +72,34 @@ const NewMedico = ({ onCreateMedico }) => {
   };
 
   const clearErrorHandler = () => {
-    dispatch(clearError())
+    dispatch(clearError());
   };
 
   if (error) {
     return (
-      <ErrorModal
-        error={error.message}
-        code={error.code}
-        onClear={clearErrorHandler}
-      />
+      <Dialog open={error} onClear={clearErrorHandler}>
+        <DialogTitle>
+          Ha ocurrido un error: {`Código ${error.errorCode}`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>{error.message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={clearErrorHandler}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
   if (isLoading || !especialidades) {
     return (
       <div className="center">
-        <LoadingSpinner />
+        <CircularProgress />
       </div>
     );
   }
@@ -90,7 +108,7 @@ const NewMedico = ({ onCreateMedico }) => {
     <React.Fragment>
       {/* <ErrorModal error={error.message} onClear={clearErrorHandler} /> */}
       <form method="POST" className="place-form" onSubmit={placeSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
+        {isLoading && <CircularProgress asOverlay />}
         <Input
           id="nombre"
           name="nombre"
@@ -98,8 +116,9 @@ const NewMedico = ({ onCreateMedico }) => {
           type="text"
           label="Nombre"
           validators={[VALIDATOR_REQUIRE()]}
-          errorText="Por favor ingrese un ombre valido."
+          errorText="Por favor ingrese un nombre valido."
           onInput={inputHandler}
+          initialValid={false}
         />
         <Input
           id="apellido"
