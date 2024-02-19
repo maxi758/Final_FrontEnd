@@ -10,6 +10,7 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
+import { CircularProgress } from '@mui/material';
 
 const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   const { token } = useSelector((state) => state.auth);
@@ -95,27 +96,37 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   if (isLoading || !loadedMedico ) {
     return (
       <div className="center">
-        <LoadingSpinner />
+        <CircularProgress />
       </div>
     );
   }
 
   if (error) {
-    console.log('error',error);
     return (
-      <ErrorModal
-        error={error.message}
-        code={error.errorCode}
-        onClear={clearErrorHandler}
-      />
+      <Dialog open={error} onClear={clearErrorHandler}>
+        <DialogTitle>
+          Ha ocurrido un error: {`Código ${error.errorCode}`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>{error.message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={clearErrorHandler}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
-
   return (
     <React.Fragment>
-      {error &&<ErrorModal error={error.message} code={error.errorCode} onClear={clearErrorHandler} />}
+      {/* {error &&<ErrorModal error={error.message} code={error.errorCode} onClear={clearErrorHandler} />} */}
       <form className="place-form" onSubmit={medicoUpdateSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
+        {isLoading && <CircularProgress asOverlay />}
         <Input
           id="nombre"
           element="input"
