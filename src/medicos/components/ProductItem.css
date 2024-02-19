@@ -43,12 +43,22 @@
   }
   
   .product-item__modal-actions {
-    text-align: right;
+    text-align: center;
+    margin: 0.5rem;
+  }
+
+  .product-item__modal-actions button {
+    text-align: center;
+    margin: 0 0.25rem;
   }
   
   .product-item__actions button,
   .product-item__actions a {
-    margin: 0.5rem;
+    margin: 1rem;
+  }
+
+  .product-item__modal-actions div button:hover {
+    color: blue;
   }
   
   .map-container {
