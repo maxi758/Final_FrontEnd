@@ -8,8 +8,32 @@
   max-width: 25rem;
   margin: 7rem auto;
   text-align: center;
+  border-radius: 1rem;
 }
 
 .authentication form {
   margin-bottom: 1rem;
+  border-radius: 1rem;
 }
+
+.authentication Input{
+  margin: 1rem;
+  border-radius: 0.5rem;
+  padding: auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #f3f3f3; /* Change to the color you want */
+  margin: 20px 0; /* Add some margin to give it space */
+}
+
+.auth-link:hover {
+  color: blue; /* Change to the color you want on hover */
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.auth-button:hover{
+  color: blue;
+}
+

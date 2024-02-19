@@ -43,7 +43,7 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
           nombre: {
             value: undefined,
             isValid: false,
-          }
+          },
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -95,7 +95,7 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
   };
 
   const clearErrorHandler = () => {
-    dispatch(clearError())
+    dispatch(clearError());
   };
 
   if (error) {
@@ -167,12 +167,18 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
             errorText="Ingrese una contraseña válida de al menos 5 caracteres"
             onInput={inputHandler}
           />
-          <Button variant='contained' type="submit" disabled={!formState.isValid}>
+          <Button
+            className="auth-button"
+            variant="text"
+            type="submit"
+            disabled={!formState.isValid}
+          >
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
           {!isLoginMode && rol === 'ADMIN' && (
             <Button
-            variant='contained'
+              className="auth-button"
+              variant="text"
               type="submit"
               onClick={createAdminHandler}
               disabled={!formState.isValid}
@@ -181,12 +187,15 @@ const Auth = ({ onLogin, onRegister, onCreateAdmin }) => {
             </Button>
           )}
         </form>
-        <Button  variant='contained' onClick={switchModeHandler}>
-          CAMBIAR A {isLoginMode ? 'REGISTRARSE' : 'INICIAR SESION'}
-        </Button>
         <hr />
-        <Link to="/auth/recover-password">
-          <Button color='info' variant='contained' >RECUPERAR CONTRASEÑA</Button>
+        <Link className="auth-link" onClick={switchModeHandler}>
+          {isLoginMode
+            ? 'Necesita una cuenta? Registrarse'
+            : 'Ya tiene una cuenta? Iniciar Sesión'}
+        </Link>
+        <hr />
+        <Link className="auth-link" to="/auth/recover-password">
+          Olvidaste tu contraseña?
         </Link>
       </Card>
     </React.Fragment>

@@ -70,7 +70,7 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
         </div>
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
-      {!isLoading && orderedTurnos.length!==0 && (
+      {!isLoading && orderedTurnos.length !== 0 && (
         <div className="center">
           <TurnoList
             items={orderedTurnos}
@@ -79,18 +79,18 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
             onCancelTurno={cancelTurnoHandler}
           />
 
-            <Pagination
-              count={totalPages}
-              //variant="outlined"
-              color="primary"
-              shape="rounded"
-              page={page}
-              onChange={changePageHandler}
-              sx={{
-                width: 300,
-                color: 'success.main',
-              }}
-            />
+          <Pagination
+            count={totalPages}
+            //variant="outlined"
+            color="primary"
+            shape="rounded"
+            page={page}
+            onChange={changePageHandler}
+            sx={{
+              width: 300,
+              color: 'success.main',
+            }}
+          />
         </div>
       )}
     </React.Fragment>
