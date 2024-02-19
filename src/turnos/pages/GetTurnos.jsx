@@ -4,7 +4,7 @@ import {
   getTurnos,
   selectAllTurnos,
 } from '../../redux/reducers/turnosReducer';
-import { Card, CircularProgress, Pagination } from '@mui/material';
+import { Box, Card, CircularProgress, Pagination } from '@mui/material';
 import TurnoList from '../components/TurnoList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -79,18 +79,14 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
             onCancelTurno={cancelTurnoHandler}
           />
 
-          <Pagination
-            count={totalPages}
-            //variant="outlined"
-            color="primary"
-            shape="rounded"
-            page={page}
-            onChange={changePageHandler}
-            sx={{
-              width: 300,
-              color: 'success.main',
-            }}
-          />
+          <Box display="flex" justifyContent="center">
+            <Pagination
+              count={totalPages}
+              color="primary"
+              page={page}
+              onChange={changePageHandler}
+            />
+          </Box>
         </div>
       )}
     </React.Fragment>
