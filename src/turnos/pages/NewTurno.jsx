@@ -46,7 +46,7 @@ const NewTurno = ({ onCreateTurno }) => {
         {
           ...formState.inputs,
           medico: {
-            value: medicos[0].id,
+            value: medicos[0]._id,
             isValid: true,
           },
         },
@@ -133,7 +133,7 @@ const NewTurno = ({ onCreateTurno }) => {
           onInput={inputHandler}
         >
           {medicos.map((medico) => (
-            <option key={medico.id} value={medico.id}>
+            <option key={medico._id} value={medico._id}>
               {medico.nombre} {medico.apellido}
             </option>
           ))}

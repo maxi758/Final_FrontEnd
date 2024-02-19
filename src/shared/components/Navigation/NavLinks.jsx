@@ -23,7 +23,7 @@ const NavLinks = (props) => {
       )}
       {rol === 'PACIENTE' && (
         <li>
-          <NavLink to="/">Medicos</NavLink>
+          <NavLink to="/medicos">Medicos</NavLink>
         </li>
       )}
       {/* {auth.isLoggedIn && (

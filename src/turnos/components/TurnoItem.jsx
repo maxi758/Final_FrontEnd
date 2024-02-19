@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
 import { Card, CircularProgress, Button } from '@mui/material';
-import { useHttpClient } from '../../hooks/http-hook';
 
 import '../../medicos/components/ProductItem.css';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Modal from '../../shared/components/UIElements/Modal';
 //import Button from '../../shared/components/FormElements/Button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { clearError } from '../../redux/reducers/turnosReducer';
 
 const TurnoItem = (props) => {
-  const { isLoading } = useSelector((state) => state.turnos);
-  const { error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error } = useSelector((state) => state.turnos);
   const { token, rol } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const dispatch = useDispatch();
   const [item, setItem] = useState({
     id: props.id,
     nombre: props.nombre,
@@ -47,10 +47,15 @@ const TurnoItem = (props) => {
     } catch (err) {}
   };
 
+  const clearErrorHandler = () => {
+    dispatch(clearError());
+  };
+
   if (error) {
-    <ErrorModal error={error.message} code={error.code} onClear={clearError} />;
+    <ErrorModal error={error.message} code={error.code} onClear={clearErrorHandler} />;
   }
 
+  console.log('props', props);
   return (
     <React.Fragment>
       {/* <ErrorModal error={error} onClear={clearError} /> */}

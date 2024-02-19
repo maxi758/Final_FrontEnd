@@ -49,7 +49,11 @@ const getUserId = (thunkAPI) => {
 
 const updatePagination = (state) => {
   state.total = Object.keys(state.entities).length;
-  state.totalPages = Math.ceil(state.total / 10); // Replace 10 with your actual items per page
+  if (state.total === 0) {
+    state.totalPages = 1;
+    return;
+  }
+  state.totalPages = Math.ceil(state.total / 10); 
 };
 
 export const getTurnos = createAsyncThunk(
@@ -300,6 +304,8 @@ export const deleteTurno = createAsyncThunk(
 
 export const clearError = createAction('turnos/clearError');
 
+export const clearTurnosMedico = createAction('turnos/clearTurnosMedico');
+
 const turnosSlice = createSlice({
   name: 'turnos',
   initialState,
@@ -443,6 +449,9 @@ const turnosSlice = createSlice({
       })
       .addCase(clearError, (state) => {
         state.error = null;
+      })
+      .addCase(clearTurnosMedico, (state) => {
+        state.turnosMedico = [];
       });
   },
 });

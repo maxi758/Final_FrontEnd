@@ -37,7 +37,7 @@ const TurnosContainer = () => {
   useEffect(() => {
     try {
       if (!medicos) {
-        dispatch(getMedicos(token));
+        dispatch(getMedicos());
       }
       dispatch(getTurnos());
     } catch (err) {

@@ -14,6 +14,7 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
     (state) => state.turnos
   );
   const orderedTurnos = useSelector(selectAllTurnos);
+  console.log('orderedTurnos', orderedTurnos);
   console.log('orderedTurnos', orderedTurnos.length);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -54,6 +55,13 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
       // </div>
     );
   }
+  if (isLoading) {
+    return (
+      <div className="center">
+        <CircularProgress asOverlay />
+      </div>
+    );
+  }
 
   return (
     <React.Fragment>
@@ -62,15 +70,15 @@ const Turnos = ({ onAsignTurno, onCancelTurno, onDeleteTurno }) => {
           <CircularProgress asOverlay />
         </div>
       )}
-      {!orderedTurnos && !isLoading && (
+      {(!orderedTurnos) && !isLoading && (
         <div className="center">
           <Card>
-            <h2>No hay turnos</h2>
+            <h2>No hay turnos disponibles</h2>
           </Card>
         </div>
       )}
       {/* asOverlay es para que el spinner se vea sobre el contenido */}
-      {!isLoading && orderedTurnos.length !== 0 && (
+      {!isLoading && orderedTurnos && (
         <div className="center">
           <TurnoList
             items={orderedTurnos}
