@@ -170,7 +170,7 @@ const UpdateUser = ({ error, onLogin, onAccountRecovery, onResetPassword }) => {
                   initialValue={key}
                   initialValid={true}
                   readOnly={true}
-                  disabled={true}
+                  //disabled={true}
                 />
               )}
             </div>

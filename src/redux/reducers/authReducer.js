@@ -114,7 +114,7 @@ export const resetPassword = createAsyncThunk(
     try {
       const response = await axios.patch(
         url,
-        { formData },
+         formData ,
         {
           headers: {
             'Content-Type': 'application/json',

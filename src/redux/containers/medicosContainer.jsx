@@ -69,7 +69,9 @@ const MedicosContainer = () => {
         formData: { id, nombre, apellido, matricula, especialidad },
         token,
       })
-    );
+    ).then(() => {
+      dispatch(getMedicos());
+    });
     navigate('/medicos');
   };
 
