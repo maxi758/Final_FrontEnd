@@ -318,7 +318,7 @@ const turnosSlice = createSlice({
       .addCase(getTurnos.fulfilled, (state, action) => {
         turnosAdapter.setAll(state, action.payload.turnos);
         state.total = action.payload.total;
-        if (action.payload.totalPages > 1) {
+        if (action.payload.totalPages >= 1) {
           state.totalPages = action.payload.totalPages;
         }
         state.isLoading = false;

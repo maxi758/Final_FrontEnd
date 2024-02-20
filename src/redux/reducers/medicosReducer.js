@@ -169,7 +169,7 @@ const medicosSlice = createSlice({
       .addCase(getMedicos.fulfilled, (state, action) => {
         state.medicos = action.payload.medicos;
         state.total = action.payload.total;
-        if (action.payload.totalPages > 1) {
+        if (action.payload.totalPages >= 1) {
           state.totalPages = action.payload.totalPages;
         }
         state.isLoading = false;

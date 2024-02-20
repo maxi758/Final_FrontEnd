@@ -2,19 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useForm } from '../../hooks/form-hook';
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Input from '../../shared/components/FormElements/Input';
-import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE } from '../../util/validators';
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../../redux/reducers/medicosReducer';
-import { CircularProgress } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 
 const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   const { token } = useSelector((state) => state.auth);
-  const { loadedMedico, isLoading, error } = useSelector((state) => state.medicos);
+  const { loadedMedico, isLoading, error } = useSelector(
+    (state) => state.medicos
+  );
   const { especialidades } = useSelector((state) => state.especialidades);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -90,10 +97,10 @@ const UpdateMedico = ({ onUpdateMedico, onFindOneMedico }) => {
   };
 
   const clearErrorHandler = () => {
-    dispatch(clearError())
+    dispatch(clearError());
   };
 
-  if (isLoading || !loadedMedico ) {
+  if (isLoading || !loadedMedico) {
     return (
       <div className="center">
         <CircularProgress />
